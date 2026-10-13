@@ -1,0 +1,6 @@
+TPDE         9779acf4ada3736e779391da1e4b3369dba08024 (github.com/tpde2/tpde, Tue Sep 22 07:39:13 2026 +0000, submodules recursive)
+LLVM         19.1.7 (Debian trixie llvm-19-dev 1:19.1.7-3+b1, LLVM_BUILD_TYPE RelWithDebInfo, linked statically)
+Compiler     clang++-19 (Debian 19.1.7)
+Image        nyanjit-bench-tpde:local FROM debian:stable-slim (arm64, Debian 13.6 trixie; local debian:trixie tag is amd64)
+TPDE flags   CMAKE_BUILD_TYPE=Release: -O3 -DNDEBUG -std=gnu++20 -fPIC -fvisibility=hidden -fvisibility-inlines-hidden -fno-exceptions -ffunction-sections -fdata-sections; TPDE_ENABLE_ASSERTIONS=OFF
+Harness      -O3 -DNDEBUG -std=gnu++20 -fPIE -fno-exceptions -fvisibility=hidden -fvisibility-inlines-hidden -ffunction-sections -fdata-sections, -Wl,--gc-sections

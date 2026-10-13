@@ -1,0 +1,851 @@
+{
+  "architecture": "loong64",
+  "platform": "linux",
+  "scope": "handoff-loong64.md L0 through L4",
+  "status": "L0/L1/L2/L3/L4 complete; LASX lowering out of scope",
+  "phases": {
+    "L0": "complete",
+    "L1": "complete",
+    "L2": "complete",
+    "L3": "complete: scalar FP32/FP64, baseline FMA, residency, Var/label FP homes, literals, inline math",
+    "L4": "complete: 128-bit LSX integer lowering, shared FP/vector allocation, calls, spills, feature gates and reports"
+  },
+  "features": [
+    "la64v1.0 baseline with process HWCAP LSX/LASX discovery",
+    "shared byte/text plans and exact visitor sizing",
+    "up to four instruction constants and validated symbol relocations",
+    "16/21/26-bit scaled branches with long/far relaxation",
+    "leaf C and Go entries, 128-bit C results",
+    "stack and caller workspace spills, scoped mutable variables",
+    "full-count shifts/rotates, carry/borrow, high multiply, CLZ/CTZ",
+    "ALSL.D scaled arithmetic, BSTRPICK.D, branch-free selection",
+    "indexed memory, explicit byte order, direct zero-branch countdowns",
+    "C calls and runtime callbacks via purego plus a project-owned 16-byte-aligned C trampoline",
+    "Go ABIInternal calls with sixteen integer register arguments and caller-owned homes",
+    "pointer-free Go 1.26/1.27 runtime registration and PC/SP unwind metadata",
+    "C-entry GPR/FPR preservation across managed Go calls",
+    "LP64D sign extension for typed 32-bit outbound C arguments",
+    "foreign pthread callback reentry into registered JIT code with GC and stack growth",
+    "baseline FP32/FP64 arithmetic, square root and width conversion",
+    "hardware FMA with direct binary32 rounding and deferred contraction",
+    "f8-f23 allocation and scoped variable/label homes; f0-f2 expansion temporaries",
+    "shared PCADDU12I + FLD literal pools and exact GP/FP clobber reporting",
+    "all 28 inline math functions at both widths with measured budgets",
+    "FCSR0 effects separated from integer flags and non-signaling bank copies",
+    "128-bit LSX integer arithmetic, including VMUL.D, shifts/rotates and byte equality masks",
+    "LSX unaligned/indexed vector memory and PCADDU12I + VLD literal constants",
+    "shared sixteen-home f8-f23 FP/vector bank and full 128-bit call spills",
+    "CPU-profile/HWCAP LSX gating, LASX implies LSX, forced scalar feature mode"
+  ],
+  "abi_sources": [
+    "Go 1.26.9 and 1.27.2 internal/abi/abi_loong64.go",
+    "Go cmd/internal/obj/loong64/{a.out,cpu}.go and runtime/asm_loong64.s",
+    "https://github.com/loongson/la-abi-specs/blob/release/lapcs.adoc"
+  ],
+  "acceptance": {
+    "go_versions": [
+      "1.26.9",
+      "1.27.2"
+    ],
+    "runner": "QEMU 10.2.3 la464,lsx=off,lasx=off and max",
+    "hardware_cache_publication": "not validated",
+    "original_fp_call_legacy_paths": "all 32 original integer/FP call programs x 8 config indices, on both CPUs",
+    "native_go_test": "pass",
+    "cross_target_vet": "pass",
+    "harness_unit_tests": "pass",
+    "diff_check": "pass",
+    "profile_checks": 130,
+    "smoke_checks": 4,
+    "failures": 0,
+    "integer_sweep": {
+      "programs_per_profile": 3000,
+      "profiles": 2,
+      "configurations_per_program": 4,
+      "executions": 24000,
+      "mismatches": 0,
+      "waived_compile_limits": 0
+    },
+    "legacy_integer_replays": 128,
+    "l1_evidence": "e2e/.build/results/loong64-l1/summary.md",
+    "evidence": "e2e/.build/results/loong64-l3/summary.md",
+    "mixed_integer_call_sweep": {
+      "programs_per_profile": 500,
+      "profiles": 2,
+      "successful_executions_per_profile": 2364,
+      "expected_limits_per_profile": 197,
+      "limit_reasons": [
+        "128-byte test stack budget",
+        "512-byte managed frame limit"
+      ],
+      "unexpected_compile_errors": 0,
+      "mismatches": 0
+    },
+    "original_integer_call_legacy": {
+      "programs": 16,
+      "profiles": 2,
+      "successful_executions_per_profile": 64,
+      "expected_limits_per_profile": 10
+    },
+    "sysroot": {
+      "publisher": "https://github.com/loong64/cross-tools/releases/tag/20260912",
+      "libc": "musl 1.2.5",
+      "arm64_archive_sha256": "3f4c46cc5b7247f5498ce3b3d48e4f923cade5fe13859839d806504cfc82a8ce",
+      "amd64_archive_sha256": "425cba4b4edb9555a7268a6bb78dcbb9dbde83905031b0d144ce1adc76be29aa",
+      "both_target_libcs_baseline_tested": true,
+      "image_built_for": "linux/arm64",
+      "rejected_candidate": "Loongson glibc 2.42 loader uses LSX unconditionally"
+    },
+    "l2_evidence": "e2e/.build/results/loong64-l2/summary.md",
+    "l3_profile_checks": 130,
+    "l3_smoke_checks": 4,
+    "l3_assembler_final_checks": 4,
+    "l3_sweep_go_version": "1.27.2",
+    "l3_sweep": {
+      "baseline": {
+        "integer_programs": 3000,
+        "fp_programs": 3000,
+        "successful_executions": 89281,
+        "expected_limits": 7366,
+        "results": {
+          "limit:Compile/C/Platform128": 4318,
+          "limit:Go/C/Platform": 2891,
+          "limit:Go/Go/Platform+Func": 157,
+          "pass:Compile/C/NoUse": 9095,
+          "pass:Compile/C/Platform": 9095,
+          "pass:Compile/C/Platform/Compact": 9095,
+          "pass:Compile/C/Platform128": 4777,
+          "pass:Compile/Go/NoUse": 9095,
+          "pass:Compile/Go/Platform+Func": 9095,
+          "pass:Foreign/C/Platform": 6077,
+          "pass:Go/C/Platform": 15109,
+          "pass:Go/Go/Platform+Func": 17843
+        },
+        "legacy_pairs": 256,
+        "legacy_expected_limits": 36,
+        "legacy_passes": 220,
+        "mismatches": 0,
+        "unexpected_compile_errors": 0
+      },
+      "max": {
+        "integer_programs": 3000,
+        "fp_programs": 3000,
+        "successful_executions": 89281,
+        "expected_limits": 7366,
+        "results": {
+          "limit:Compile/C/Platform128": 4318,
+          "limit:Go/C/Platform": 2891,
+          "limit:Go/Go/Platform+Func": 157,
+          "pass:Compile/C/NoUse": 9095,
+          "pass:Compile/C/Platform": 9095,
+          "pass:Compile/C/Platform/Compact": 9095,
+          "pass:Compile/C/Platform128": 4777,
+          "pass:Compile/Go/NoUse": 9095,
+          "pass:Compile/Go/Platform+Func": 9095,
+          "pass:Foreign/C/Platform": 6077,
+          "pass:Go/C/Platform": 15109,
+          "pass:Go/Go/Platform+Func": 17843
+        },
+        "legacy_pairs": 256,
+        "legacy_expected_limits": 36,
+        "legacy_passes": 220,
+        "mismatches": 0,
+        "unexpected_compile_errors": 0
+      }
+    },
+    "l3_math_counts": "e2e/.build/results/loong64-l3/math-counts.md",
+    "l3_expected_limit_reasons": [
+      "128-byte test stack budget",
+      "512-byte managed frame limit"
+    ]
+  },
+  "review_round_1": {
+    "items": "1-6 implemented",
+    "fixes": [
+      "Realign LoongArch and RISC-V C callees after the runtime foreign-stack transition, preserving exact incoming SP and both integer results",
+      "Include R21 in the LoongArch Go-call clobber report",
+      "Report preservation according to C versus Go entry ABI on LoongArch and RISC-V",
+      "Sign-extend 32-bit RISC-V C arguments consistently with LP64 psABI, retaining LoongArch behavior",
+      "Require StackPlatform for outbound calls/syscalls in labeled and straight-line code on every backend",
+      "Reject out-of-range LoongArch 12-bit immediates instead of silently truncating",
+      "Preserve test flags when invoking the container's patched QEMU explicitly"
+    ],
+    "independent_C_fixtures": "SP mod 16 and eighth-argument leaf; volatile aligned __int128 local compiled by GCC",
+    "regression_cpus": [
+      "la464,lsx=off,lasx=off",
+      "max",
+      "rv64"
+    ],
+    "go_versions": [
+      "1.26.9",
+      "1.27.2"
+    ],
+    "final_acceptance": {
+      "loong64": 130,
+      "riscv64": 140,
+      "smoke": 8,
+      "failures": 0,
+      "native_tests": "pass",
+      "harness_tests": "pass",
+      "cross_target_vet": "pass",
+      "diff_check": "pass"
+    },
+    "initial_acceptance_failure": "LoongArch max / Go 1.27.2 varfuzz: runtime.Pinner leak panic. Three isolated full package repeats and a full profile-matrix rerun passed. Retained rather than omitted from evidence.",
+    "additional_gc_stress": "GOGC=10 GODEBUG=gccheckmark=1 on LoongArch max / Go 1.27.2 found an unmarked object; cause unresolved. See evidence for controlled comparison against the previous gateway.",
+    "evidence": "e2e/.build/results/loong64-review/summary.md",
+    "previous_gateway_gc_comparison": "Temporary direct-purego overlay: four full package runs passed with GOGC=10 GODEBUG=gccheckmark=1; this does not establish the cause or age of the current-gateway GC failure."
+  },
+  "review_round_2": {
+    "status": "required items 1-3 implemented; optional item 4 Builder API gap documented",
+    "qemu_argv": "Round 1 fix retained; multi-architecture argv unit tests added; amd64/386/riscv64/loong64 suites rerun using explicit patched QEMU, including the 386 missing-SSE2 negative probe",
+    "long_chains": {
+      "selector": "iterative reachability and suspended-node scheduling; folding/order preserved",
+      "builder": "iterative deferred-expression materialization, validation and invalid-value descent",
+      "reproduction_before": "10000 operations with 1 MiB Go stack: fatal stack overflow in prior selector",
+      "reproduction_after": "1200000 instruction operations and 300000 deferred-expression operations compile and execute with 1 MiB Go stack",
+      "regressions": [
+        "subprocess long-chain test for instruction and expression forms",
+        "shared expression DAG validation/materialization",
+        "narrow parameters with garbage upper bits",
+        "320 live GP/FP chain prefixes with spill offsets above 2047"
+      ]
+    },
+    "managed_frames": {
+      "loong64_limit_bytes": 640,
+      "riscv64_limit_bytes": 640,
+      "runtime_versions": [
+        "1.26.9",
+        "1.27.2"
+      ],
+      "reserve_justification": "800-byte Go NOSPLIT reserve minus 160 bytes: 40-byte invocation gateway plus at most 120-byte automatic LoongArch NOSPLIT leaf. morestack allocates no user-stack frame before switching to g0. Outgoing homes are included in the generated frame. Indirect calls retain Go linker assumptions about splittable callees; aggregate arbitrary NOSPLIT/generated call chains are not proven by a per-frame cap.",
+      "leaf_saves": "drop unconditional full C save sets for managed leaf entries; keep actual allocated GPR saves. Allocation/expansion FPRs are C-volatile. Functions with Go calls keep all C-preserved GPR/FPR saves.",
+      "boundary_tests": "execute exact 640-byte managed frames with three Go calls, live GP/FP values, GC and stack growth; compiler and registrar reject 656 bytes"
+    },
+    "limit_comparison": {
+      "go_version": "1.27.2",
+      "start_index": 100000,
+      "accepted_cases_per_integer_or_fp_mode": 128,
+      "variants": [
+        "leaf",
+        "native C calls",
+        "mixed calls"
+      ],
+      "Go/C/Platform_attempts_per_cpu": 768,
+      "before_limits_per_cpu": 125,
+      "after_limits_per_cpu": 0,
+      "before_limit_percent": 16.276041666666664,
+      "after_limit_percent": 0,
+      "cpus": [
+        "la464,lsx=off,lasx=off",
+        "max"
+      ],
+      "other_limits": "128-byte test stack limits still counted separately; not waived as passes",
+      "mismatches": 0
+    },
+    "public_byte_order_memory": {
+      "builder_big_endian_selector": false,
+      "public_ir_and_machine_support": true,
+      "machine_execution_coverage": "target/loong64 TestNativeMemoryAddressPlans exercises native and big-endian operations"
+    },
+    "evidence": "e2e/.build/results/loong64-review2/summary.md",
+    "acceptance": {
+      "native_go_test_all": "pass",
+      "harness_go_test_all": "pass",
+      "cross_target_vet": "pass",
+      "diff_check": "pass",
+      "go_versions": [
+        "1.26.9",
+        "1.27.2"
+      ],
+      "qemu_dispatch": "explicit patched QEMU; private binfmt retained for reexec",
+      "full_checks": {
+        "loong64": 130,
+        "riscv64": 140,
+        "amd64": 144,
+        "386": 134
+      },
+      "initial_386_failures": {
+        "count": 4,
+        "cause": "round 1 syscall fixture used ConstNative(39), 32 bits on 386; Syscall requires 64 bits",
+        "fix": "use Const(39)",
+        "replay": "all four compiler-package CPU/version executions pass; initial failures retained in 386.xml"
+      },
+      "final_refresh": {
+        "checks": 30,
+        "failures": 0,
+        "coverage": "builder package on loong64/riscv64/amd64/386 and compiler package on 386, both CPU profiles and both Go versions"
+      },
+      "qemu_argv_probes": {
+        "checks": 6,
+        "failures": 0,
+        "selected_test_runs_per_probe": 2,
+        "excluded_test_runs": 0
+      },
+      "remaining_failures_in_required_round_2_gates": 0,
+      "round_1_gc_stress_observation": "remains unresolved; not reproduced or claimed fixed by round 2"
+    }
+  },
+  "gc_investigation": {
+    "status": "GC-checker failure reproduced in standalone standard Go under QEMU; original Pinner panic still unresolved",
+    "production_fix": false,
+    "standalone_probe": "e2e/probes/gcmap/main.go",
+    "probe_dependencies": "standard library only; no NyanJIT, purego, unsafe, C calls, metadata registration, or emitted code",
+    "probe_workload": "20 goroutines, 400000 nested maps per process",
+    "control_runs": [
+      {
+        "config": "go127-max",
+        "cpu": "max",
+        "overrides": {},
+        "exit_codes": [
+          0,
+          0,
+          2,
+          0,
+          0,
+          0
+        ],
+        "passes": 5,
+        "failures": 1
+      },
+      {
+        "config": "go127-baseline",
+        "cpu": "la464,lsx=off,lasx=off",
+        "overrides": {},
+        "exit_codes": [
+          0,
+          0,
+          0,
+          2,
+          0,
+          0
+        ],
+        "passes": 5,
+        "failures": 1
+      },
+      {
+        "config": "go127-nogreentea-max",
+        "cpu": "max",
+        "overrides": {},
+        "exit_codes": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "passes": 6,
+        "failures": 0
+      },
+      {
+        "config": "go127-noasync-max",
+        "cpu": "max",
+        "overrides": {
+          "GODEBUG": "gccheckmark=1,asyncpreemptoff=1"
+        },
+        "exit_codes": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "passes": 6,
+        "failures": 0
+      },
+      {
+        "config": "go127-oneproc-max",
+        "cpu": "max",
+        "overrides": {
+          "GOMAXPROCS": "1"
+        },
+        "exit_codes": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "passes": 6,
+        "failures": 0
+      },
+      {
+        "config": "go126-max",
+        "cpu": "max",
+        "overrides": {},
+        "exit_codes": [
+          0,
+          0,
+          0,
+          2,
+          0,
+          0
+        ],
+        "passes": 5,
+        "failures": 1
+      },
+      {
+        "config": "go126-baseline",
+        "cpu": "la464,lsx=off,lasx=off",
+        "overrides": {},
+        "exit_codes": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "passes": 6,
+        "failures": 0
+      }
+    ],
+    "native_arm64_control": "one run passes",
+    "current_full_package_gc_repeats": 5,
+    "preserved_round_1_sweep_repeats": 10,
+    "compiler_only_gc_repeats": 3,
+    "optional_suite": "e2e/loong64_gc.star",
+    "stress_matrix": {
+      "initial": "three profile processes passed; Go 1.26.9 baseline exited 2; unwritable JUnit path lost full output; summary retained",
+      "isolated_baseline_repeat": "Go 1.26.9 baseline: build and three-repeat execution pass",
+      "recorded_matrix_repeat": {
+        "checks": 6,
+        "failures": 1,
+        "failure_profile": "Go 1.27.2 / la464,lsx=off,lasx=off",
+        "reason": "checkmark found unmarked object",
+        "evidence": "e2e/.build/results/loong64-gc/profiles-repeat.xml"
+      },
+      "settings": "GOGC=10 GODEBUG=gccheckmark=1; three complete package repeats per process; no retries or skip reclassification"
+    },
+    "conclusion": "Standalone failures are reproduced with the published tonistiigi 10.2.3 build; Debian 10.0.13 and unpatched upstream 10.2.3 GCC/glibc controls each pass 40 runs. This narrows the issue to an emulator-build difference without identifying a particular patch, compiler or libc cause. The original Pinner panic is not independently reproduced.",
+    "native_tests": "pass",
+    "harness_tests": "pass",
+    "cross_target_vet": "pass",
+    "diff_check": "pass",
+    "evidence": "e2e/.build/results/loong64-gc2/summary.md",
+    "control_interpretation": "gccheckmark=1 already sets asyncpreemptoff=1 in both Go runtimes. The explicit noasync sample is redundant and supplies no preemption evidence.",
+    "emulator_comparison": {
+      "host": "native linux/arm64",
+      "guest_executable": "identical standalone standard-library-only map-only-1.27.2 binary across user-mode emulators",
+      "conditions": "GOGC=10 GODEBUG=gccheckmark=1; baseline la464,lsx=off,lasx=off and max; 20 fresh processes per CPU",
+      "published_and_debian": [
+        {
+          "config": "tonistiigi-baseline",
+          "cpu": "la464,lsx=off,lasx=off",
+          "exit_codes": [
+            0,
+            2,
+            0,
+            0,
+            0,
+            2,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "passes": 18,
+          "failures": 2
+        },
+        {
+          "config": "debian-baseline",
+          "cpu": "la464,lsx=off,lasx=off",
+          "exit_codes": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "passes": 20,
+          "failures": 0
+        },
+        {
+          "config": "tonistiigi-max",
+          "cpu": "max",
+          "exit_codes": [
+            2,
+            0,
+            0,
+            2,
+            0,
+            0,
+            0,
+            0,
+            2,
+            2,
+            2,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "passes": 15,
+          "failures": 5
+        },
+        {
+          "config": "debian-max",
+          "cpu": "max",
+          "exit_codes": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "passes": 20,
+          "failures": 0
+        }
+      ],
+      "unpatched_upstream": [
+        {
+          "config": "stock102-baseline",
+          "cpu": "la464,lsx=off,lasx=off",
+          "exit_codes": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "passes": 20,
+          "failures": 0
+        },
+        {
+          "config": "stock102-max",
+          "cpu": "max",
+          "exit_codes": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "passes": 20,
+          "failures": 0
+        }
+      ],
+      "upstream_source": "https://github.com/qemu/qemu/tree/v10.2.3",
+      "source_archive_sha256": "d0ae37de1bb6df9dd6824078cb41903ecce8734f33696b5f717ceab66e99e4f0",
+      "upstream_build": "GCC 14.2.0, GNU ld 2.44, glibc; loongarch64-linux-user only, no binfmt patches",
+      "native_arm64": [
+        {
+          "go_version": "1.26.9",
+          "exit_codes": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "passes": 30,
+          "failures": 0
+        },
+        {
+          "go_version": "1.27.2",
+          "exit_codes": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "passes": 30,
+          "failures": 0
+        }
+      ],
+      "pinner_only_control": [
+        {
+          "config": "toni-pin-max",
+          "exit_codes": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "passes": 6,
+          "failures": 0
+        },
+        {
+          "config": "toni-pin-baseline",
+          "exit_codes": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "passes": 6,
+          "failures": 0
+        },
+        {
+          "config": "debian-pin-max",
+          "exit_codes": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "passes": 6,
+          "failures": 0
+        }
+      ]
+    },
+    "selectable_runner": {
+      "option": "NYANJIT_E2E_LOONG64_QEMU=debian",
+      "default": "tonistiigi",
+      "stock_binary": "/opt/nyanjit/qemu-debian/qemu-loongarch64",
+      "private_binfmt_flags": "F; no P since stock QEMU constructs argv[0]",
+      "direct_dispatch": "stock QEMU receives executable once; tonistiigi receives executable then explicit original argv[0]",
+      "container_build": "repository e2e/container/Dockerfile with VM_OSES= OPENBSD_ARCHS= LINUX_ONLY=true, image nyanjit-e2e:loong64-gc-full",
+      "tested_versions": [
+        "1.26.9",
+        "1.27.2"
+      ],
+      "acceptance": {
+        "debian-runner.xml": {
+          "checks": 6,
+          "failures": 0
+        },
+        "private-probes.xml": {
+          "checks": 10,
+          "failures": 0
+        },
+        "explicit-probes.xml": {
+          "checks": 10,
+          "failures": 0
+        },
+        "debian-matrix.xml": {
+          "checks": 130,
+          "failures": 0
+        }
+      },
+      "regressions": "runner mode validation, explicit/private argv conventions, settings forwarded by run.sh, ELF registration match and flags, failed setup preserves previous handler",
+      "disabled_gc_features": []
+    }
+  },
+  "lsx_lowering": {
+    "native_bits": 128,
+    "integer_lanes_bits": [
+      8,
+      16,
+      32,
+      64
+    ],
+    "allocation": {
+      "shared_FP_and_vector_homes": "f8-f23 (sixteen total)",
+      "expansion_temporaries": "f0-f2",
+      "excluded_partial_preserved_aliases": "vr24-vr31: LP64D preserves only their low 64-bit FPR values",
+      "call_policy": "spill complete live vectors across C and Go calls",
+      "spill_slot_bytes": 16,
+      "managed_frame_limit_bytes": 640
+    },
+    "operations": [
+      "unaligned VLD/VST, signed 12-bit offsets, VLDX/VSTX indexed forms",
+      "PCADDU12I + VLD literal constants",
+      "splat, extract, insert, zero, insert-zero",
+      "add, subtract, multiply, bitwise AND/OR/XOR",
+      "immediate and scalar/per-lane variable shifts and rotations with full unsigned-count semantics",
+      "byte equality and VMSKLTZ.B/VPICKVE2GR.WU logical masks"
+    ],
+    "native_64_bit_multiply": "VMUL.D verified in Go opcode tables and QEMU; covered by differential and aliasing tests",
+    "feature_policy": "nil follows resolved profile/HWCAP; empty non-nil forces scalar; explicit LSX/LASX requirements reject incompatible explicit CPU profiles with ErrCPUUnsupported; LASX implies LSX but emits no LASX instructions",
+    "reports": "Native/Expanded/Split/Scalarized; exact temp writes from the common vector plan; per-lane right rotation reports Native",
+    "fallbacks": [
+      "carryless multiplication",
+      "non-byte-equality comparisons",
+      "short vector shapes",
+      "scoped/label vector homes"
+    ],
+    "sources": [
+      "Go 1.26.9/1.27.2 cmd/internal/obj/loong64/instOp.go, asm.go and assembler encoding tests",
+      "Go cmd/compile/abi-internal.md: no callee-save registers",
+      "https://cdn.kernel.org/doc/html/latest/arch/loongarch/introduction.html",
+      "https://github.com/loongson/la-abi-specs/blob/release/lapcs.adoc",
+      "https://github.com/qemu/qemu/blob/v10.2.3/target/loongarch/insns.decode"
+    ],
+    "reference_limitations": {
+      "published_manual": "Volume 1 is base architecture; the published Volume 2 vector manual is a two-page TBD stub",
+      "x_arch": "golang.org/x/arch v0.32.0 loong64asm has no LSX decoder. Scalar expansion words are decoded; LSX words are pinned to Go/QEMU references and executed against independent lane oracles."
+    },
+    "validation": {
+      "native_go_test_all": "pass",
+      "cross_target_vet": "pass",
+      "diff_check": "pass",
+      "container_image": "nyanjit-e2e:loong64-gc-full",
+      "qemu": "tonistiigi 10.2.3, private binfmt namespace",
+      "cpus": [
+        "la464,lsx=off,lasx=off",
+        "max"
+      ],
+      "go_versions": [
+        "1.26.9",
+        "1.27.2"
+      ],
+      "full_package_and_e2e_matrix": {
+        "checks_per_Go_version": 66,
+        "total_checks": 132,
+        "failures": 0,
+        "skips": 0,
+        "junit": "/cache/results/lsx-loong64-final.xml"
+      },
+      "randomized_vectors": {
+        "programs": 200,
+        "configurations": [
+          "baseline/default",
+          "baseline/forced-scalar",
+          "max/default-LSX",
+          "max/forced-scalar"
+        ],
+        "matching_execution_records": 2816,
+        "mismatches": 0,
+        "final_native_replay_records": 704,
+        "final_native_replay_mismatches": 0,
+        "reference": "amd64 forced-scalar fingerprints"
+      },
+      "direct_aliasing": "all integer lane widths, both source aliases and a distinct destination, scalar and per-lane counts including overshifts and high 64-bit counts",
+      "mixed_pressure": "24 vectors and 12 FP values for leaf stack/workspace; 6 vectors and 6 FP values around foreign C, managed C and Go calls with GC/stack growth, both FP widths",
+      "managed_frame_boundary": "22 live vectors execute in an exact 640-byte frame across Go stack growth/GC on both Go versions; 656-byte frame rejected",
+      "indexed_memory": "unaligned VLDX/VSTX execution and guards on both Go versions",
+      "vector_fuzzer": "shared varfuzz remains scalar-only; separate randomized vector differential replay and lane-oracle tests cover vectors",
+      "sha256": {
+        "scalar_listing_instructions": 41770,
+        "LSX_listing_instructions": 2586,
+        "instruction_reduction_percent": 93.8,
+        "digests": "all match crypto/sha256 in native LSX and scalar modes on both Go versions",
+        "hardware_timing": "not measured"
+      }
+    }
+  }
+}

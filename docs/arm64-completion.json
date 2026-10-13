@@ -1,0 +1,36 @@
+{
+  "scope": "handoff-backend-parity.md Phases 0\u20135; not the broader PPC roadmap",
+  "architecture": "arm64",
+  "status": "complete",
+  "cpu_profiles": true,
+  "features": [
+    "LSLV/LSRV/ASRV/RORV",
+    "UMULH, ADCS/SBCS",
+    "CLZ/RBIT",
+    "S/Z/C facts and no-borrow polarity",
+    "flag-liveness-safe SUB/CBNZ loops"
+  ],
+  "evidence": [
+    "compile/backend_parity_test.go",
+    "compile/backend_budget_test.go",
+    "compile/shift_by_linux_test.go",
+    "compile/mul_high_linux_test.go",
+    "compile/word_carry_linux_test.go",
+    "compile/count_zeros_linux_test.go",
+    "compile/profile_instructions_test.go",
+    "e2e/arm64.star",
+    "e2e/.build/results/backend-parity-arm64.xml"
+  ],
+  "acceptance": {
+    "go_versions": [
+      "1.26.9",
+      "1.27.2"
+    ],
+    "checks": 120,
+    "failures": 0,
+    "runner": "native ARM64 (explicit compiler profiles)"
+  },
+  "limitations": [
+    "FP residency and large compare immediates are outside the parity handoff"
+  ]
+}

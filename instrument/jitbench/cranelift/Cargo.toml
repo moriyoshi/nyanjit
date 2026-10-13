@@ -1,0 +1,16 @@
+[package]
+name = "clbench"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[dependencies]
+cranelift-codegen = { version = "0.137.0", features = ["disas"] }
+cranelift-frontend = "0.137.0"
+cranelift-jit = "0.137.0"
+cranelift-module = "0.137.0"
+cranelift-native = "0.137.0"
+
+[profile.release]
+codegen-units = 1
+lto = "thin"

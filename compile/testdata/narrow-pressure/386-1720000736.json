@@ -1,0 +1,806 @@
+{
+  "Variables": [
+    {
+      "Type": {
+        "Kind": 1,
+        "Lanes": 1,
+        "LaneBits": 64
+      },
+      "Declaration": 3,
+      "Initial": [
+        2
+      ]
+    }
+  ],
+  "Instructions": [
+    {
+      "Type": {},
+      "Bits": 64,
+      "Symbol": ""
+    },
+    {
+      "Type": {},
+      "Bits": 32,
+      "Symbol": ""
+    },
+    {
+      "Type": {},
+      "Bits": 64,
+      "Symbol": ""
+    },
+    {
+      "Type": {
+        "Kind": 1,
+        "Lanes": 1,
+        "LaneBits": 64
+      },
+      "Op": 56,
+      "Bits": 64,
+      "Symbol": "",
+      "A": 2
+    },
+    {
+      "Type": {},
+      "Op": 1,
+      "Bits": 64,
+      "Symbol": "",
+      "Imm": 1664447449115266
+    },
+    {
+      "Type": {},
+      "Op": 11,
+      "Symbol": "",
+      "A": 2,
+      "B": 4
+    },
+    {
+      "Type": {},
+      "Op": 21,
+      "Bits": 64,
+      "Symbol": "",
+      "A": 4,
+      "Imm": 60
+    },
+    {
+      "Type": {},
+      "Op": 12,
+      "Symbol": "",
+      "A": 2
+    },
+    {
+      "Type": {},
+      "Op": 13,
+      "Bits": 8,
+      "Symbol": "",
+      "A": 2,
+      "B": 7
+    },
+    {
+      "Type": {},
+      "Op": 21,
+      "Bits": 64,
+      "Symbol": "",
+      "Imm": 29
+    },
+    {
+      "Type": {},
+      "Op": 1,
+      "Bits": 64,
+      "Symbol": "",
+      "Imm": 27467661
+    },
+    {
+      "Type": {},
+      "Op": 1,
+      "Bits": 32,
+      "Symbol": "",
+      "Imm": 5
+    },
+    {
+      "Type": {},
+      "Op": 7,
+      "Bits": 32,
+      "Symbol": "",
+      "A": 1,
+      "B": 11
+    },
+    {
+      "Type": {},
+      "Op": 1,
+      "Bits": 32,
+      "Symbol": "",
+      "Imm": 916922114
+    },
+    {
+      "Type": {},
+      "Op": 7,
+      "Bits": 32,
+      "Symbol": "",
+      "A": 12,
+      "B": 13
+    },
+    {
+      "Type": {},
+      "Op": 1,
+      "Bits": 64,
+      "Symbol": "",
+      "Imm": 334082281
+    },
+    {
+      "Type": {},
+      "Op": 1,
+      "Bits": 64,
+      "Symbol": "",
+      "Imm": 201
+    },
+    {
+      "Type": {},
+      "Op": 12,
+      "Symbol": "",
+      "A": 2
+    },
+    {
+      "Type": {},
+      "Op": 13,
+      "Bits": 8,
+      "Symbol": "",
+      "A": 2,
+      "B": 17
+    },
+    {
+      "Type": {},
+      "Op": 19,
+      "Bits": 32,
+      "Symbol": "",
+      "A": 10
+    },
+    {
+      "Type": {},
+      "Op": 11,
+      "Symbol": "",
+      "A": 2,
+      "B": 6
+    },
+    {
+      "Type": {},
+      "Op": 4,
+      "Bits": 64,
+      "Symbol": "",
+      "A": 16,
+      "B": 9
+    },
+    {
+      "Type": {},
+      "Op": 3,
+      "Bits": 32,
+      "Symbol": "",
+      "A": 19,
+      "B": 1
+    },
+    {
+      "Type": {},
+      "Op": 1,
+      "Bits": 64,
+      "Symbol": "",
+      "Imm": 17321976
+    },
+    {
+      "Type": {},
+      "Op": 23,
+      "Bits": 32,
+      "Symbol": "",
+      "A": 22,
+      "Imm": 24
+    },
+    {
+      "Type": {},
+      "Op": 2,
+      "Bits": 32,
+      "Symbol": "",
+      "A": 24,
+      "B": 24
+    },
+    {
+      "Type": {},
+      "Op": 1,
+      "Bits": 64,
+      "Symbol": "",
+      "Imm": 272676537837651
+    },
+    {
+      "Type": {},
+      "Op": 1,
+      "Bits": 64,
+      "Symbol": "",
+      "Imm": 1
+    },
+    {
+      "Type": {},
+      "Op": 5,
+      "Bits": 64,
+      "Symbol": "",
+      "A": 23,
+      "B": 27
+    },
+    {
+      "Type": {},
+      "Op": 8,
+      "Bits": 64,
+      "Symbol": "",
+      "A": 28,
+      "B": 9,
+      "C": 23
+    },
+    {
+      "Type": {},
+      "Op": 12,
+      "Symbol": "",
+      "A": 2
+    },
+    {
+      "Type": {},
+      "Op": 13,
+      "Bits": 8,
+      "Symbol": "",
+      "A": 2,
+      "B": 30
+    },
+    {
+      "Type": {},
+      "Op": 21,
+      "Bits": 64,
+      "Symbol": "",
+      "A": 29,
+      "Imm": 34
+    },
+    {
+      "Type": {
+        "Kind": 1,
+        "Lanes": 1,
+        "LaneBits": 64
+      },
+      "Op": 33,
+      "Bits": 64,
+      "Symbol": "",
+      "A": 32,
+      "B": 6
+    },
+    {
+      "Type": {},
+      "Op": 22,
+      "Bits": 64,
+      "Symbol": "",
+      "A": 33,
+      "Imm": 45
+    },
+    {
+      "Type": {},
+      "Op": 1,
+      "Bits": 64,
+      "Symbol": ""
+    },
+    {
+      "Type": {},
+      "Op": 1,
+      "Bits": 64,
+      "Symbol": "",
+      "Imm": 3
+    },
+    {
+      "Type": {},
+      "Op": 11,
+      "Symbol": "",
+      "A": 2,
+      "B": 16
+    },
+    {
+      "Type": {},
+      "Op": 63,
+      "Bits": 32,
+      "Symbol": "",
+      "A": 2,
+      "B": 22,
+      "ByteOrder": 1
+    },
+    {
+      "Type": {},
+      "Op": 3,
+      "Bits": 32,
+      "Symbol": "",
+      "A": 25,
+      "B": 24
+    },
+    {
+      "Type": {},
+      "Op": 1,
+      "Bits": 64,
+      "Symbol": "",
+      "Imm": 113215269866062576
+    },
+    {
+      "Type": {},
+      "Op": 1,
+      "Bits": 64,
+      "Symbol": "",
+      "Imm": 2036520545655017589
+    },
+    {
+      "Type": {},
+      "Op": 4,
+      "Bits": 64,
+      "Symbol": "",
+      "A": 15,
+      "B": 26
+    },
+    {
+      "Type": {},
+      "Op": 1,
+      "Bits": 64,
+      "Symbol": "",
+      "Imm": 265601039
+    },
+    {
+      "Type": {},
+      "Op": 2,
+      "Bits": 64,
+      "Symbol": "",
+      "A": 6,
+      "B": 43
+    },
+    {
+      "Type": {
+        "Kind": 1,
+        "Lanes": 1,
+        "LaneBits": 64
+      },
+      "Op": 52,
+      "Bits": 64,
+      "Symbol": "",
+      "A": 15
+    },
+    {
+      "Type": {},
+      "Op": 12,
+      "Symbol": "",
+      "A": 2
+    },
+    {
+      "Type": {},
+      "Op": 13,
+      "Bits": 8,
+      "Symbol": "",
+      "A": 2,
+      "B": 46
+    },
+    {
+      "Type": {},
+      "Op": 4,
+      "Bits": 64,
+      "Symbol": "",
+      "A": 33,
+      "B": 33
+    },
+    {
+      "Type": {},
+      "Op": 21,
+      "Bits": 64,
+      "Symbol": "",
+      "A": 15,
+      "Imm": 9
+    },
+    {
+      "Type": {},
+      "Op": 1,
+      "Bits": 64,
+      "Symbol": "",
+      "Imm": 544993894527126
+    },
+    {
+      "Type": {},
+      "Op": 1,
+      "Bits": 64,
+      "Symbol": "",
+      "Imm": 659
+    },
+    {
+      "Type": {},
+      "Op": 2,
+      "Bits": 64,
+      "Symbol": "",
+      "A": 32,
+      "B": 51
+    },
+    {
+      "Type": {},
+      "Op": 63,
+      "Bits": 32,
+      "Symbol": "",
+      "A": 2,
+      "B": 24,
+      "ByteOrder": 1
+    },
+    {
+      "Type": {},
+      "Op": 12,
+      "Symbol": "",
+      "A": 2
+    },
+    {
+      "Type": {},
+      "Op": 13,
+      "Bits": 8,
+      "Symbol": "",
+      "A": 2,
+      "B": 54
+    },
+    {
+      "Type": {},
+      "Op": 10,
+      "Symbol": "",
+      "A": 2
+    },
+    {
+      "Type": {},
+      "Op": 22,
+      "Bits": 64,
+      "Symbol": "",
+      "A": 15,
+      "Imm": 49
+    },
+    {
+      "Type": {},
+      "Op": 1,
+      "Bits": 64,
+      "Symbol": "",
+      "Imm": 11366033453565726
+    },
+    {
+      "Type": {},
+      "Op": 1,
+      "Bits": 64,
+      "Symbol": "",
+      "Imm": 86730515
+    },
+    {
+      "Type": {},
+      "Op": 23,
+      "Bits": 32,
+      "Symbol": "",
+      "A": 25,
+      "Imm": 27
+    },
+    {
+      "Type": {},
+      "Op": 1,
+      "Bits": 64,
+      "Symbol": "",
+      "Imm": 238073
+    },
+    {
+      "Type": {},
+      "Op": 2,
+      "Bits": 32,
+      "Symbol": "",
+      "A": 12,
+      "B": 14
+    },
+    {
+      "Type": {},
+      "Op": 2,
+      "Bits": 32,
+      "Symbol": "",
+      "A": 22,
+      "B": 39
+    },
+    {
+      "Type": {},
+      "Op": 21,
+      "Bits": 64,
+      "Symbol": "",
+      "A": 49,
+      "Imm": 53
+    },
+    {
+      "Type": {},
+      "Op": 11,
+      "Symbol": "",
+      "A": 2,
+      "B": 34
+    },
+    {
+      "Type": {
+        "Kind": 1,
+        "Lanes": 1,
+        "LaneBits": 64
+      },
+      "Op": 52,
+      "Bits": 64,
+      "Symbol": "",
+      "A": 57
+    },
+    {
+      "Type": {},
+      "Op": 22,
+      "Bits": 64,
+      "Symbol": "",
+      "A": 41,
+      "Imm": 1
+    },
+    {
+      "Type": {},
+      "Op": 1,
+      "Bits": 64,
+      "Symbol": "",
+      "Imm": 36376
+    },
+    {
+      "Type": {},
+      "Op": 4,
+      "Bits": 64,
+      "Symbol": "",
+      "A": 52,
+      "B": 57
+    },
+    {
+      "Type": {},
+      "Op": 1,
+      "Bits": 64,
+      "Symbol": "",
+      "Imm": 4751546684695078
+    },
+    {
+      "Type": {},
+      "Op": 23,
+      "Bits": 32,
+      "Symbol": "",
+      "A": 14,
+      "Imm": 27
+    },
+    {
+      "Type": {},
+      "Op": 1,
+      "Bits": 64,
+      "Symbol": "",
+      "Imm": 511586897439
+    },
+    {
+      "Type": {
+        "Kind": 1,
+        "Lanes": 1,
+        "LaneBits": 64
+      },
+      "Op": 33,
+      "Bits": 64,
+      "Symbol": "",
+      "A": 48,
+      "B": 6
+    },
+    {
+      "Type": {
+        "Kind": 1,
+        "Lanes": 1,
+        "LaneBits": 64
+      },
+      "Op": 33,
+      "Bits": 64,
+      "Symbol": "",
+      "A": 49,
+      "B": 34
+    },
+    {
+      "Type": {},
+      "Op": 7,
+      "Bits": 64,
+      "Symbol": "",
+      "A": 67,
+      "B": 9
+    },
+    {
+      "Type": {},
+      "Op": 7,
+      "Bits": 64,
+      "Symbol": "",
+      "A": 75,
+      "B": 15
+    },
+    {
+      "Type": {},
+      "Op": 7,
+      "Bits": 64,
+      "Symbol": "",
+      "A": 76,
+      "B": 16
+    },
+    {
+      "Type": {},
+      "Op": 7,
+      "Bits": 64,
+      "Symbol": "",
+      "A": 77,
+      "B": 23
+    },
+    {
+      "Type": {},
+      "Op": 7,
+      "Bits": 64,
+      "Symbol": "",
+      "A": 78,
+      "B": 29
+    },
+    {
+      "Type": {},
+      "Op": 7,
+      "Bits": 64,
+      "Symbol": "",
+      "A": 79,
+      "B": 35
+    },
+    {
+      "Type": {},
+      "Op": 7,
+      "Bits": 64,
+      "Symbol": "",
+      "A": 80,
+      "B": 36
+    },
+    {
+      "Type": {},
+      "Op": 7,
+      "Bits": 64,
+      "Symbol": "",
+      "A": 81,
+      "B": 41
+    },
+    {
+      "Type": {},
+      "Op": 7,
+      "Bits": 64,
+      "Symbol": "",
+      "A": 82,
+      "B": 44
+    },
+    {
+      "Type": {},
+      "Op": 7,
+      "Bits": 64,
+      "Symbol": "",
+      "A": 83,
+      "B": 45
+    },
+    {
+      "Type": {},
+      "Op": 7,
+      "Bits": 64,
+      "Symbol": "",
+      "A": 84,
+      "B": 48
+    },
+    {
+      "Type": {},
+      "Op": 7,
+      "Bits": 64,
+      "Symbol": "",
+      "A": 85,
+      "B": 49
+    },
+    {
+      "Type": {},
+      "Op": 7,
+      "Bits": 64,
+      "Symbol": "",
+      "A": 86,
+      "B": 50
+    },
+    {
+      "Type": {},
+      "Op": 7,
+      "Bits": 64,
+      "Symbol": "",
+      "A": 87,
+      "B": 52
+    },
+    {
+      "Type": {},
+      "Op": 7,
+      "Bits": 64,
+      "Symbol": "",
+      "A": 88,
+      "B": 56
+    },
+    {
+      "Type": {},
+      "Op": 7,
+      "Bits": 64,
+      "Symbol": "",
+      "A": 89,
+      "B": 58
+    },
+    {
+      "Type": {},
+      "Op": 7,
+      "Bits": 64,
+      "Symbol": "",
+      "A": 90,
+      "B": 61
+    },
+    {
+      "Type": {},
+      "Op": 7,
+      "Bits": 64,
+      "Symbol": "",
+      "A": 91,
+      "B": 67
+    },
+    {
+      "Type": {},
+      "Op": 7,
+      "Bits": 64,
+      "Symbol": "",
+      "A": 92,
+      "B": 68
+    },
+    {
+      "Type": {},
+      "Op": 7,
+      "Bits": 64,
+      "Symbol": "",
+      "A": 93,
+      "B": 70
+    },
+    {
+      "Type": {},
+      "Op": 7,
+      "Bits": 64,
+      "Symbol": "",
+      "A": 94,
+      "B": 72
+    },
+    {
+      "Type": {},
+      "Op": 63,
+      "Bits": 32,
+      "Symbol": "",
+      "A": 2,
+      "B": 1,
+      "ByteOrder": 1
+    },
+    {
+      "Type": {},
+      "Op": 63,
+      "Bits": 32,
+      "Symbol": "",
+      "A": 2,
+      "B": 14,
+      "ByteOrder": 1
+    },
+    {
+      "Type": {},
+      "Op": 63,
+      "Bits": 32,
+      "Symbol": "",
+      "A": 2,
+      "B": 39,
+      "ByteOrder": 1
+    },
+    {
+      "Type": {},
+      "Op": 63,
+      "Bits": 32,
+      "Symbol": "",
+      "A": 2,
+      "B": 60,
+      "ByteOrder": 1
+    },
+    {
+      "Type": {},
+      "Op": 63,
+      "Bits": 32,
+      "Symbol": "",
+      "A": 2,
+      "B": 71,
+      "ByteOrder": 1
+    }
+  ],
+  "Arity": 3,
+  "Result": 95
+}

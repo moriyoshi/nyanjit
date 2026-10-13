@@ -1,0 +1,9 @@
+package loong64
+
+import "github.com/moriyoshi/nyanjit/backend/machine"
+
+// FuseLoops implements machine.LoopFuser with machine.FuseZeroLoops.
+func (Policy) FuseLoops(s *machine.Stream, labels []int, bound []bool) ([]int, []bool, error) {
+	labels, err := machine.FuseZeroLoops(s, labels, bound, "loong64")
+	return labels, bound, err
+}

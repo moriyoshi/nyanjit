@@ -1,0 +1,142 @@
+name: Linux E2E
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - '**.go'
+      - '**/go.mod'
+      - '**/go.sum'
+      - go.mod
+      - go.sum
+      - go.work
+      - go.work.sum
+      - 'backend/target/*/FORMS.md'
+      - 'e2e/**'
+      - .github/workflows/e2e-linux.yml
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  NYANJIT_E2E_IMAGE: nyanjit-e2e:linux-ci
+  NYANJIT_E2E_VAR_SWEEP: ${{ github.event_name == 'pull_request' && '500' || '2000' }}
+
+jobs:
+  image:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      # Host binfmt installation is confined to this ephemeral hosted runner.
+      # Do not copy this setup onto a development or self-hosted machine.
+      - uses: docker/setup-qemu-action@99012661954931238ded8c8b007157a8430204e1 # v4.4.0
+        with:
+          image: tonistiigi/binfmt:qemu-v10.2.3@sha256:400a4873b838d1b89194d982c45e5fb3cda4593fbfd7e08a02e76b03b21166f0
+          platforms: all
+      - uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
+      - name: Build Linux-only image
+        uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7.4.0
+        with:
+          context: .
+          file: e2e/container/Dockerfile
+          platforms: linux/amd64
+          tags: ${{ env.NYANJIT_E2E_IMAGE }}
+          build-args: |
+            VM_OSES=
+            OPENBSD_ARCHS=
+            LINUX_ONLY=true
+          cache-from: type=gha,scope=linux-runtime
+          cache-to: type=gha,mode=max,scope=linux-runtime
+          outputs: type=docker,dest=/tmp/nyanjit-e2e-linux.tar
+      - name: Compress image
+        run: gzip -1 /tmp/nyanjit-e2e-linux.tar
+      # Artifacts work for fork PRs without registry push credentials.
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: linux-e2e-image
+          path: /tmp/nyanjit-e2e-linux.tar.gz
+          compression-level: 0
+          retention-days: 1
+          if-no-files-found: error
+
+  target:
+    name: ${{ matrix.target }} Go ${{ matrix.go || 'both' }}
+    needs: image
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - {target: linux/amd64, arch: amd64, go: ''}
+          - {target: linux/386, arch: '386', go: ''}
+          - {target: linux/riscv64, arch: riscv64, go: ''}
+          - {target: linux/loong64, arch: loong64, go: ''}
+          # Split PPC by Go version; each retains POWER8/9/10 coverage.
+          - {target: linux/ppc64le, arch: ppc64le, go: '1.26.9'}
+          - {target: linux/ppc64le, arch: ppc64le, go: '1.27.2'}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: linux-e2e-image
+          path: /tmp
+      - name: Load image
+        run: |
+          docker load -i /tmp/nyanjit-e2e-linux.tar.gz
+          rm /tmp/nyanjit-e2e-linux.tar.gz
+          docker image inspect "$NYANJIT_E2E_IMAGE" --format 'Image size: {{.Size}} bytes'
+      - name: Prepare cache and verify private user namespace
+        run: |
+          mkdir -p "$RUNNER_TEMP/e2e-cache"
+          # Root in the private namespace maps to container UID 0, not the
+          # hosted runner UID. Give this dedicated temporary cache write access.
+          chmod 0777 "$RUNNER_TEMP/e2e-cache"
+          docker run --rm --privileged \
+            -v "$RUNNER_TEMP/e2e-cache:/cache" "$NYANJIT_E2E_IMAGE" \
+            sh -c 'test "$NYANJIT_E2E_BINFMT_READY" = 1 && test -w /proc/sys/fs/binfmt_misc/register'
+      - name: Package matrix and sweep
+        env:
+          NYANJIT_E2E_CACHE: ${{ runner.temp }}/e2e-cache
+        run: >-
+          ./e2e/run.sh e2e/matrix.star -target "${{ matrix.target }}"
+          -go-version "${{ matrix.go }}" -suite matrix -jobs 2 -deadline 50m
+          -junit /cache/results/matrix.xml
+      - name: LoongArch baseline and max
+        if: always() && matrix.arch == 'loong64'
+        env:
+          NYANJIT_E2E_CACHE: ${{ runner.temp }}/e2e-cache
+        run: >-
+          ./e2e/run.sh e2e/loong64.star -target linux/loong64
+          -jobs 2 -deadline 30m -junit /cache/results/loong64.xml
+      - name: PPC PIE and C integration
+        if: always() && matrix.arch == 'ppc64le'
+        env:
+          NYANJIT_E2E_CACHE: ${{ runner.temp }}/e2e-cache
+        run: >-
+          ./e2e/run.sh e2e/ppc64.star -target "${{ matrix.target }}"
+          -go-version "${{ matrix.go }}" -jobs 2 -deadline 30m
+          -junit /cache/results/ppc.xml
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        if: always()
+        with:
+          name: linux-${{ matrix.arch }}-go${{ matrix.go || 'both' }}-junit
+          path: ${{ runner.temp }}/e2e-cache/results/*.xml
+          if-no-files-found: warn
+      - uses: mikepenz/action-junit-report@6ef3fdcfcd5f0b5d14df3e659ef19b8c6820f93d # v6.6.1
+        if: always()
+        with:
+          report_paths: ${{ runner.temp }}/e2e-cache/results/*.xml
+          annotate_only: true
+          job_summary: true
+          detailed_summary: true
+          fail_on_failure: true
+          fail_on_parse_error: true
+          require_tests: true

@@ -1,0 +1,23 @@
+#!/bin/sh
+set -eu
+repo=$(CDPATH='' cd -- "$(dirname -- "$0")/.." && pwd)
+cd "$repo"
+# Big-endian ppc64 is unsupported, but every package must still build there
+# (unsupported stubs), so it stays in the vet matrix with openbsd/ppc64.
+for arch in amd64 386 arm64 riscv64 loong64 ppc64le ppc64; do
+    echo "go vet: linux/$arch"
+    GOOS=linux GOARCH="$arch" CGO_ENABLED=0 go vet ./...
+    GOOS=linux GOARCH="$arch" CGO_ENABLED=0 go -C backend vet ./...
+    GOOS=linux GOARCH="$arch" CGO_ENABLED=0 go -C examples/stackvm vet ./...
+    # This interactive example currently supports only these managed-call targets.
+    case "$arch" in
+        amd64|arm64|riscv64)
+            GOOS=linux GOARCH="$arch" CGO_ENABLED=0 go -C examples/snake_termbox vet ./...
+            ;;
+    esac
+done
+echo "go vet: openbsd/ppc64"
+GOOS=openbsd GOARCH=ppc64 CGO_ENABLED=0 go vet ./...
+GOOS=openbsd GOARCH=ppc64 CGO_ENABLED=0 go -C backend vet ./...
+GOOS=openbsd GOARCH=ppc64 CGO_ENABLED=0 go -C examples/stackvm vet ./...
+(cd e2e && go vet ./...)

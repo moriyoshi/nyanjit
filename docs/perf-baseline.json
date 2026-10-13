@@ -1,0 +1,651 @@
+{
+  "schema": 1,
+  "go": "go version go1.27.2 linux/arm64",
+  "host": "aarch64",
+  "gomaxprocs": 1,
+  "affinity_cpu": 5,
+  "command": "taskset -c 5 env GOMAXPROCS=1 go test ./compile -run '^$' -bench '^BenchmarkPrepare$' -benchmem -benchtime=300ms -count=5 -cpu=1",
+  "denominator": "source IR instructions, before vector legalization",
+  "workloads": {
+    "chain": {
+      "median": {
+        "ns/op": 12306693.0,
+        "B/insn": 5183.0,
+        "allocs/insn": 9.171,
+        "insns/op": 8025.0,
+        "ns/insn": 1534.0,
+        "B/op": 41592583.0,
+        "allocs/op": 73597.0
+      },
+      "samples": [
+        {
+          "ns/op": 12066950.0,
+          "B/insn": 5183.0,
+          "allocs/insn": 9.171,
+          "insns/op": 8025.0,
+          "ns/insn": 1504.0,
+          "B/op": 41592603.0,
+          "allocs/op": 73597.0
+        },
+        {
+          "ns/op": 12306693.0,
+          "B/insn": 5183.0,
+          "allocs/insn": 9.171,
+          "insns/op": 8025.0,
+          "ns/insn": 1534.0,
+          "B/op": 41592582.0,
+          "allocs/op": 73597.0
+        },
+        {
+          "ns/op": 12415473.0,
+          "B/insn": 5183.0,
+          "allocs/insn": 9.171,
+          "insns/op": 8025.0,
+          "ns/insn": 1547.0,
+          "B/op": 41592584.0,
+          "allocs/op": 73597.0
+        },
+        {
+          "ns/op": 12338020.0,
+          "B/insn": 5183.0,
+          "allocs/insn": 9.171,
+          "insns/op": 8025.0,
+          "ns/insn": 1537.0,
+          "B/op": 41592583.0,
+          "allocs/op": 73597.0
+        },
+        {
+          "ns/op": 12134573.0,
+          "B/insn": 5183.0,
+          "allocs/insn": 9.171,
+          "insns/op": 8025.0,
+          "ns/insn": 1512.0,
+          "B/op": 41592583.0,
+          "allocs/op": 73597.0
+        }
+      ]
+    },
+    "pressure": {
+      "median": {
+        "ns/op": 20714686.0,
+        "B/insn": 4281.0,
+        "allocs/insn": 8.524,
+        "insns/op": 16001.0,
+        "ns/insn": 1295.0,
+        "B/op": 68494821.0,
+        "allocs/op": 136400.0
+      },
+      "samples": [
+        {
+          "ns/op": 21439181.0,
+          "B/insn": 4281.0,
+          "allocs/insn": 8.524,
+          "insns/op": 16001.0,
+          "ns/insn": 1340.0,
+          "B/op": 68494832.0,
+          "allocs/op": 136400.0
+        },
+        {
+          "ns/op": 20967788.0,
+          "B/insn": 4281.0,
+          "allocs/insn": 8.524,
+          "insns/op": 16001.0,
+          "ns/insn": 1310.0,
+          "B/op": 68494820.0,
+          "allocs/op": 136400.0
+        },
+        {
+          "ns/op": 20355742.0,
+          "B/insn": 4281.0,
+          "allocs/insn": 8.524,
+          "insns/op": 16001.0,
+          "ns/insn": 1272.0,
+          "B/op": 68494816.0,
+          "allocs/op": 136400.0
+        },
+        {
+          "ns/op": 20714686.0,
+          "B/insn": 4281.0,
+          "allocs/insn": 8.524,
+          "insns/op": 16001.0,
+          "ns/insn": 1295.0,
+          "B/op": 68494821.0,
+          "allocs/op": 136400.0
+        },
+        {
+          "ns/op": 20686509.0,
+          "B/insn": 4281.0,
+          "allocs/insn": 8.524,
+          "insns/op": 16001.0,
+          "ns/insn": 1293.0,
+          "B/op": 68494822.0,
+          "allocs/op": 136400.0
+        }
+      ]
+    },
+    "fp": {
+      "median": {
+        "ns/op": 76226702.0,
+        "B/insn": 7813.0,
+        "allocs/insn": 65.99,
+        "insns/op": 12025.0,
+        "ns/insn": 6339.0,
+        "B/op": 93948180.0,
+        "allocs/op": 793515.0
+      },
+      "samples": [
+        {
+          "ns/op": 76226702.0,
+          "B/insn": 7812.0,
+          "allocs/insn": 65.99,
+          "insns/op": 12025.0,
+          "ns/insn": 6339.0,
+          "B/op": 93938886.0,
+          "allocs/op": 793514.0
+        },
+        {
+          "ns/op": 76884298.0,
+          "B/insn": 7813.0,
+          "allocs/insn": 65.99,
+          "insns/op": 12025.0,
+          "ns/insn": 6394.0,
+          "B/op": 93948180.0,
+          "allocs/op": 793515.0
+        },
+        {
+          "ns/op": 75543357.0,
+          "B/insn": 7813.0,
+          "allocs/insn": 65.99,
+          "insns/op": 12025.0,
+          "ns/insn": 6282.0,
+          "B/op": 93948226.0,
+          "allocs/op": 793515.0
+        },
+        {
+          "ns/op": 74376047.0,
+          "B/insn": 7813.0,
+          "allocs/insn": 65.99,
+          "insns/op": 12025.0,
+          "ns/insn": 6185.0,
+          "B/op": 93946320.0,
+          "allocs/op": 793515.0
+        },
+        {
+          "ns/op": 77408810.0,
+          "B/insn": 7813.0,
+          "allocs/insn": 65.99,
+          "insns/op": 12025.0,
+          "ns/insn": 6437.0,
+          "B/op": 93948230.0,
+          "allocs/op": 793515.0
+        }
+      ]
+    },
+    "loops": {
+      "median": {
+        "ns/op": 1981299055.0,
+        "B/insn": 46475.0,
+        "allocs/insn": 28.74,
+        "insns/op": 12005.0,
+        "ns/insn": 165039.0,
+        "B/op": 557929400.0,
+        "allocs/op": 345001.0
+      },
+      "samples": [
+        {
+          "ns/op": 1991741133.0,
+          "B/insn": 46475.0,
+          "allocs/insn": 28.74,
+          "insns/op": 12005.0,
+          "ns/insn": 165909.0,
+          "B/op": 557929592.0,
+          "allocs/op": 345005.0
+        },
+        {
+          "ns/op": 1975348462.0,
+          "B/insn": 46475.0,
+          "allocs/insn": 28.74,
+          "insns/op": 12005.0,
+          "ns/insn": 164544.0,
+          "B/op": 557929400.0,
+          "allocs/op": 345001.0
+        },
+        {
+          "ns/op": 1987404431.0,
+          "B/insn": 46475.0,
+          "allocs/insn": 28.74,
+          "insns/op": 12005.0,
+          "ns/insn": 165548.0,
+          "B/op": 557929384.0,
+          "allocs/op": 345000.0
+        },
+        {
+          "ns/op": 1977398035.0,
+          "B/insn": 46475.0,
+          "allocs/insn": 28.74,
+          "insns/op": 12005.0,
+          "ns/insn": 164715.0,
+          "B/op": 557929416.0,
+          "allocs/op": 345001.0
+        },
+        {
+          "ns/op": 1981299055.0,
+          "B/insn": 46475.0,
+          "allocs/insn": 28.74,
+          "insns/op": 12005.0,
+          "ns/insn": 165039.0,
+          "B/op": 557929368.0,
+          "allocs/op": 345000.0
+        }
+      ]
+    },
+    "calls": {
+      "median": {
+        "ns/op": 104611501.0,
+        "B/insn": 9566.0,
+        "allocs/insn": 116.4,
+        "insns/op": 10004.0,
+        "ns/insn": 10457.0,
+        "B/op": 95703000.0,
+        "allocs/op": 1164721.0
+      },
+      "samples": [
+        {
+          "ns/op": 105422039.0,
+          "B/insn": 9566.0,
+          "allocs/insn": 116.4,
+          "insns/op": 10004.0,
+          "ns/insn": 10538.0,
+          "B/op": 95703000.0,
+          "allocs/op": 1164721.0
+        },
+        {
+          "ns/op": 104843570.0,
+          "B/insn": 9566.0,
+          "allocs/insn": 116.4,
+          "insns/op": 10004.0,
+          "ns/insn": 10480.0,
+          "B/op": 95703010.0,
+          "allocs/op": 1164721.0
+        },
+        {
+          "ns/op": 101768885.0,
+          "B/insn": 9566.0,
+          "allocs/insn": 116.4,
+          "insns/op": 10004.0,
+          "ns/insn": 10173.0,
+          "B/op": 95703005.0,
+          "allocs/op": 1164721.0
+        },
+        {
+          "ns/op": 104611501.0,
+          "B/insn": 9566.0,
+          "allocs/insn": 116.4,
+          "insns/op": 10004.0,
+          "ns/insn": 10457.0,
+          "B/op": 95702938.0,
+          "allocs/op": 1164720.0
+        },
+        {
+          "ns/op": 103504086.0,
+          "B/insn": 9566.0,
+          "allocs/insn": 116.4,
+          "insns/op": 10004.0,
+          "ns/insn": 10346.0,
+          "B/op": 95702944.0,
+          "allocs/op": 1164720.0
+        }
+      ]
+    },
+    "vectors": {
+      "median": {
+        "ns/op": 57798474.0,
+        "B/insn": 7660.0,
+        "allocs/insn": 73.69,
+        "insns/op": 9004.0,
+        "ns/insn": 6419.0,
+        "B/op": 68966684.0,
+        "allocs/op": 663528.0
+      },
+      "samples": [
+        {
+          "ns/op": 57160017.0,
+          "B/insn": 7660.0,
+          "allocs/insn": 73.69,
+          "insns/op": 9004.0,
+          "ns/insn": 6348.0,
+          "B/op": 68966676.0,
+          "allocs/op": 663528.0
+        },
+        {
+          "ns/op": 58254178.0,
+          "B/insn": 7660.0,
+          "allocs/insn": 73.69,
+          "insns/op": 9004.0,
+          "ns/insn": 6470.0,
+          "B/op": 68966688.0,
+          "allocs/op": 663529.0
+        },
+        {
+          "ns/op": 57753879.0,
+          "B/insn": 7660.0,
+          "allocs/insn": 73.69,
+          "insns/op": 9004.0,
+          "ns/insn": 6414.0,
+          "B/op": 68966668.0,
+          "allocs/op": 663528.0
+        },
+        {
+          "ns/op": 57798474.0,
+          "B/insn": 7660.0,
+          "allocs/insn": 73.69,
+          "insns/op": 9004.0,
+          "ns/insn": 6419.0,
+          "B/op": 68966693.0,
+          "allocs/op": 663529.0
+        },
+        {
+          "ns/op": 58238991.0,
+          "B/insn": 7660.0,
+          "allocs/insn": 73.69,
+          "insns/op": 9004.0,
+          "ns/insn": 6468.0,
+          "B/op": 68966684.0,
+          "allocs/op": 663528.0
+        }
+      ]
+    },
+    "scopes": {
+      "median": {
+        "ns/op": 9263542665.0,
+        "B/insn": 3559.0,
+        "allocs/insn": 5.858,
+        "insns/op": 8003.0,
+        "ns/insn": 1157509.0,
+        "B/op": 28484464.0,
+        "allocs/op": 46878.0
+      },
+      "samples": [
+        {
+          "ns/op": 9225027796.0,
+          "B/insn": 3559.0,
+          "allocs/insn": 5.858,
+          "insns/op": 8003.0,
+          "ns/insn": 1152696.0,
+          "B/op": 28484528.0,
+          "allocs/op": 46879.0
+        },
+        {
+          "ns/op": 9327543749.0,
+          "B/insn": 3559.0,
+          "allocs/insn": 5.858,
+          "insns/op": 8003.0,
+          "ns/insn": 1165506.0,
+          "B/op": 28484464.0,
+          "allocs/op": 46878.0
+        },
+        {
+          "ns/op": 9266198175.0,
+          "B/insn": 3559.0,
+          "allocs/insn": 5.858,
+          "insns/op": 8003.0,
+          "ns/insn": 1157841.0,
+          "B/op": 28484464.0,
+          "allocs/op": 46878.0
+        },
+        {
+          "ns/op": 9263542665.0,
+          "B/insn": 3559.0,
+          "allocs/insn": 5.858,
+          "insns/op": 8003.0,
+          "ns/insn": 1157509.0,
+          "B/op": 28484480.0,
+          "allocs/op": 46878.0
+        },
+        {
+          "ns/op": 9263148721.0,
+          "B/insn": 3559.0,
+          "allocs/insn": 5.858,
+          "insns/op": 8003.0,
+          "ns/insn": 1157460.0,
+          "B/op": 28484464.0,
+          "allocs/op": 46878.0
+        }
+      ]
+    },
+    "sha256-scalar": {
+      "median": {
+        "ns/op": 191683190.0,
+        "B/insn": 83587.0,
+        "allocs/insn": 121.4,
+        "insns/op": 3187.0,
+        "ns/insn": 60145.0,
+        "B/op": 266392808.0,
+        "allocs/op": 387045.0
+      },
+      "samples": [
+        {
+          "ns/op": 194186599.0,
+          "B/insn": 83587.0,
+          "allocs/insn": 121.4,
+          "insns/op": 3187.0,
+          "ns/insn": 60931.0,
+          "B/op": 266392832.0,
+          "allocs/op": 387045.0
+        },
+        {
+          "ns/op": 192169918.0,
+          "B/insn": 83587.0,
+          "allocs/insn": 121.4,
+          "insns/op": 3187.0,
+          "ns/insn": 60298.0,
+          "B/op": 266392800.0,
+          "allocs/op": 387045.0
+        },
+        {
+          "ns/op": 190541292.0,
+          "B/insn": 83587.0,
+          "allocs/insn": 121.4,
+          "insns/op": 3187.0,
+          "ns/insn": 59787.0,
+          "B/op": 266392792.0,
+          "allocs/op": 387045.0
+        },
+        {
+          "ns/op": 191683190.0,
+          "B/insn": 83587.0,
+          "allocs/insn": 121.4,
+          "insns/op": 3187.0,
+          "ns/insn": 60145.0,
+          "B/op": 266392808.0,
+          "allocs/op": 387045.0
+        },
+        {
+          "ns/op": 189748252.0,
+          "B/insn": 83587.0,
+          "allocs/insn": 121.4,
+          "insns/op": 3187.0,
+          "ns/insn": 59538.0,
+          "B/op": 266392808.0,
+          "allocs/op": 387045.0
+        }
+      ]
+    },
+    "sha256-simd": {
+      "median": {
+        "ns/op": 15534973.0,
+        "B/insn": 6645.0,
+        "allocs/insn": 54.38,
+        "insns/op": 3187.0,
+        "ns/insn": 4874.0,
+        "B/op": 21178774.0,
+        "allocs/op": 173301.0
+      },
+      "samples": [
+        {
+          "ns/op": 15726377.0,
+          "B/insn": 6645.0,
+          "allocs/insn": 54.38,
+          "insns/op": 3187.0,
+          "ns/insn": 4935.0,
+          "B/op": 21178765.0,
+          "allocs/op": 173301.0
+        },
+        {
+          "ns/op": 15530459.0,
+          "B/insn": 6645.0,
+          "allocs/insn": 54.38,
+          "insns/op": 3187.0,
+          "ns/insn": 4873.0,
+          "B/op": 21178756.0,
+          "allocs/op": 173301.0
+        },
+        {
+          "ns/op": 15534973.0,
+          "B/insn": 6645.0,
+          "allocs/insn": 54.38,
+          "insns/op": 3187.0,
+          "ns/insn": 4874.0,
+          "B/op": 21178774.0,
+          "allocs/op": 173301.0
+        },
+        {
+          "ns/op": 15076069.0,
+          "B/insn": 6645.0,
+          "allocs/insn": 54.38,
+          "insns/op": 3187.0,
+          "ns/insn": 4730.0,
+          "B/op": 21178790.0,
+          "allocs/op": 173301.0
+        },
+        {
+          "ns/op": 15613059.0,
+          "B/insn": 6645.0,
+          "allocs/insn": 54.38,
+          "insns/op": 3187.0,
+          "ns/insn": 4899.0,
+          "B/op": 21178796.0,
+          "allocs/op": 173301.0
+        }
+      ]
+    },
+    "tiny": {
+      "median": {
+        "ns/op": 8504.0,
+        "B/insn": 4400.0,
+        "allocs/insn": 56.33,
+        "insns/op": 3.0,
+        "ns/insn": 2835.0,
+        "B/op": 13200.0,
+        "allocs/op": 169.0
+      },
+      "samples": [
+        {
+          "ns/op": 8706.0,
+          "B/insn": 4400.0,
+          "allocs/insn": 56.33,
+          "insns/op": 3.0,
+          "ns/insn": 2902.0,
+          "B/op": 13200.0,
+          "allocs/op": 169.0
+        },
+        {
+          "ns/op": 8533.0,
+          "B/insn": 4400.0,
+          "allocs/insn": 56.33,
+          "insns/op": 3.0,
+          "ns/insn": 2844.0,
+          "B/op": 13200.0,
+          "allocs/op": 169.0
+        },
+        {
+          "ns/op": 8474.0,
+          "B/insn": 4400.0,
+          "allocs/insn": 56.33,
+          "insns/op": 3.0,
+          "ns/insn": 2825.0,
+          "B/op": 13200.0,
+          "allocs/op": 169.0
+        },
+        {
+          "ns/op": 8504.0,
+          "B/insn": 4400.0,
+          "allocs/insn": 56.33,
+          "insns/op": 3.0,
+          "ns/insn": 2835.0,
+          "B/op": 13200.0,
+          "allocs/op": 169.0
+        },
+        {
+          "ns/op": 8488.0,
+          "B/insn": 4400.0,
+          "allocs/insn": 56.33,
+          "insns/op": 3.0,
+          "ns/insn": 2829.0,
+          "B/op": 13200.0,
+          "allocs/op": 169.0
+        }
+      ],
+      "baseline_stage": "post round 6, before allocation reductions"
+    },
+    "small": {
+      "median": {
+        "ns/op": 62990.0,
+        "B/insn": 3819.0,
+        "allocs/insn": 14.05,
+        "insns/op": 44.0,
+        "ns/insn": 1432.0,
+        "B/op": 168056.0,
+        "allocs/op": 618.0
+      },
+      "samples": [
+        {
+          "ns/op": 62990.0,
+          "B/insn": 3819.0,
+          "allocs/insn": 14.05,
+          "insns/op": 44.0,
+          "ns/insn": 1432.0,
+          "B/op": 168056.0,
+          "allocs/op": 618.0
+        },
+        {
+          "ns/op": 62650.0,
+          "B/insn": 3819.0,
+          "allocs/insn": 14.05,
+          "insns/op": 44.0,
+          "ns/insn": 1424.0,
+          "B/op": 168056.0,
+          "allocs/op": 618.0
+        },
+        {
+          "ns/op": 62559.0,
+          "B/insn": 3819.0,
+          "allocs/insn": 14.05,
+          "insns/op": 44.0,
+          "ns/insn": 1422.0,
+          "B/op": 168056.0,
+          "allocs/op": 618.0
+        },
+        {
+          "ns/op": 64180.0,
+          "B/insn": 3819.0,
+          "allocs/insn": 14.05,
+          "insns/op": 44.0,
+          "ns/insn": 1459.0,
+          "B/op": 168056.0,
+          "allocs/op": 618.0
+        },
+        {
+          "ns/op": 70274.0,
+          "B/insn": 3819.0,
+          "allocs/insn": 14.05,
+          "insns/op": 44.0,
+          "ns/insn": 1597.0,
+          "B/op": 168056.0,
+          "allocs/op": 618.0
+        }
+      ],
+      "baseline_stage": "post round 6, before allocation reductions"
+    }
+  }
+}

@@ -1,0 +1,403 @@
+{
+  "scope": "handoff-backend-parity.md Phases 0\u20135; not the broader PPC roadmap",
+  "architecture": "386",
+  "status": "complete",
+  "cpu_profiles": true,
+  "features": [
+    "CL scalar shifts, SHLD/SHRD paired shifts and rotates",
+    "native 32-bit MUL/ADC/SBB",
+    "legacy visitors canonicalized to shared carry/high-product operations",
+    "portable bit-count fallbacks"
+  ],
+  "evidence": [
+    "compile/backend_parity_test.go",
+    "compile/backend_budget_test.go",
+    "compile/shift_by_linux_test.go",
+    "compile/mul_high_linux_test.go",
+    "compile/word_carry_linux_test.go",
+    "compile/count_zeros_linux_test.go",
+    "compile/profile_instructions_test.go",
+    "e2e/386.star",
+    "e2e/.build/results/backend-parity-386.xml"
+  ],
+  "acceptance": {
+    "go_versions": [
+      "1.26.9",
+      "1.27.2"
+    ],
+    "checks": 106,
+    "failures": 0,
+    "runner": "QEMU user-mode baseline/max"
+  },
+  "limitations": [
+    "FP residency and large compare immediates are outside the parity handoff"
+  ],
+  "floating_point": {
+    "scope": "handoff-386-fp.md P0-P4; native integer SIMD tracked separately below",
+    "status": "complete",
+    "completed_phases": [
+      "P0 SSE2 baseline and fail-closed native verification",
+      "P1 GP-resident SSE2 scalar arithmetic",
+      "P2 inline math, accuracy and dctlogo; workspace paired integer operations",
+      "P3 XMM residency, typed FP variable homes and FP label parameters",
+      "P4 shared absolute-address FP literal pool and per-mapping relocation"
+    ],
+    "pending_phases": [],
+    "abi": "IEEE bit-pattern integer slots: one word for FP32, two low-first words for FP64; cdecl EAX:EDX or Go ABI0 stack result",
+    "operations": [
+      "FAdd",
+      "FSub",
+      "FMul",
+      "FDiv",
+      "FSqrt",
+      "FConvert",
+      "integer sign/absolute masks",
+      "FProductError via Dekker",
+      "all 28 inline math entry points, both FP widths"
+    ],
+    "fma": false,
+    "evidence": [
+      "target/i386/float_test.go",
+      "machine/fp_writes_i386_test.go",
+      "compile/float_i386_test.go",
+      "compile/float_linux_386_test.go",
+      "compile/exact_product_linux_test.go",
+      "compile/scoped_vars_linux_test.go",
+      "compile/varfuzz/legacy_corpus_test.go",
+      "compile/varfuzz/scoped_fuzz_test.go",
+      "abi/entry_386_test.go",
+      "compile/sse2_linux_386_test.go",
+      "cpuprofile/x86_baseline_test.go",
+      "compile/varfuzz/float_386_test.go",
+      "target/i386/paired_test.go",
+      "compile/word_memory_linux_386_test.go",
+      "compile/math_cross_test.go",
+      "compile/math_linux_test.go",
+      "compile/math_accuracy_linux_test.go",
+      "examples/dctlogo/main_test.go",
+      "target/i386/float_memory_test.go",
+      "compile/fp_i386_residency_test.go",
+      "compile/fp_residency_linux_386_test.go",
+      "compile/fp_residency_linux_test.go",
+      "compile/fp_hint_review_linux_test.go",
+      "machine/vector_test.go",
+      "target/i386/literal_test.go",
+      "machine/literal_386_relocation_test.go",
+      "execution/relocation_linux_test.go",
+      "execution/literal_linux_386_test.go",
+      "compile/literal_linux_386_test.go",
+      "compile/literals_test.go"
+    ],
+    "limitations": [
+      "Managed frames are limited to 240 bytes; larger cases remain explicit limits",
+      "386 FMA and native packed SIMD remain outside P0-P4"
+    ],
+    "strict_fp_sweep": {
+      "programs_per_config": 3000,
+      "configs": [
+        "C/StackPlatform",
+        "C/StackNoUse",
+        "Go/StackPlatform",
+        "Go/StackNoUse"
+      ],
+      "executions": 12000,
+      "limits": 0,
+      "failures": 0,
+      "go_version": "1.27.2",
+      "runner": "QEMU qemu32,-sse3",
+      "phase": "P4"
+    },
+    "e2e": {
+      "go_versions": [
+        "1.26.9",
+        "1.27.2"
+      ],
+      "checks_per_version": 64,
+      "failures": 0,
+      "cpu_profiles": [
+        "qemu32,-sse3",
+        "max"
+      ],
+      "negative_probe": "GO386=softfloat driver, qemu32,-sse2 rejects with ErrCPUUnsupported",
+      "phase": "P4",
+      "junit": "e2e/.build/results/386-fp-p4/e2e.xml"
+    },
+    "validation_architectures": [
+      "arm64",
+      "amd64",
+      "386",
+      "riscv64",
+      "ppc64le"
+    ],
+    "mixed_fp_sweep": {
+      "phase": "P4",
+      "accepted_cases": 3000,
+      "successful_checks": 38555,
+      "known_stack_frame_limits": 9766,
+      "fp_allocation_pressure_failures": 0,
+      "unexpected_errors": 0,
+      "mismatches": 0,
+      "per_configuration": {
+        "Compile/C/NoUse": {
+          "executed": 4547,
+          "known_limits": 0
+        },
+        "Compile/C/Platform": {
+          "executed": 4547,
+          "known_limits": 0
+        },
+        "Compile/C/Platform/Compact": {
+          "executed": 4547,
+          "known_limits": 0
+        },
+        "Compile/C/Platform128": {
+          "executed": 1005,
+          "known_limits": 3542
+        },
+        "Compile/Go/NoUse": {
+          "executed": 4547,
+          "known_limits": 0
+        },
+        "Compile/Go/Platform+Func": {
+          "executed": 4547,
+          "known_limits": 0
+        },
+        "Foreign/C/Platform": {
+          "executed": 3039,
+          "known_limits": 0
+        },
+        "Go/C/Platform": {
+          "executed": 5888,
+          "known_limits": 3112
+        },
+        "Go/Go/Platform+Func": {
+          "executed": 5888,
+          "known_limits": 3112
+        }
+      },
+      "matches_P3_counts": true
+    },
+    "evidence_directory": "e2e/.build/results/386-fp-p4",
+    "p1_mixed_fp_sweep": {
+      "accepted_cases": 3000,
+      "variants_per_case": [
+        "leaf",
+        "native C call",
+        "mixed Go/C call"
+      ],
+      "successful_checks": 29461,
+      "known_stack_frame_limits": 18860,
+      "fp_allocation_pressure_failures": 0,
+      "unexpected_errors": 0,
+      "mismatches": 0,
+      "per_configuration": {
+        "Compile/C/NoUse": {
+          "executed": 0,
+          "known_limits": 4547
+        },
+        "Compile/C/Platform": {
+          "executed": 4547,
+          "known_limits": 0
+        },
+        "Compile/C/Platform/Compact": {
+          "executed": 4547,
+          "known_limits": 0
+        },
+        "Compile/C/Platform128": {
+          "executed": 1005,
+          "known_limits": 3542
+        },
+        "Compile/Go/NoUse": {
+          "executed": 0,
+          "known_limits": 4547
+        },
+        "Compile/Go/Platform+Func": {
+          "executed": 4547,
+          "known_limits": 0
+        },
+        "Foreign/C/Platform": {
+          "executed": 3039,
+          "known_limits": 0
+        },
+        "Go/C/Platform": {
+          "executed": 5888,
+          "known_limits": 3112
+        },
+        "Go/Go/Platform+Func": {
+          "executed": 5888,
+          "known_limits": 3112
+        }
+      },
+      "discarded_candidates": {
+        "fp range": 4
+      }
+    },
+    "baseline_math_determinism": {
+      "function_width_pairs": 56,
+      "samples_per_pair": 145,
+      "reference_target": "amd64 (SSE2 baseline, no FMA)",
+      "result": "matching AMD64 and P3 SHA256 digests",
+      "nan_payloads": "canonicalized",
+      "signed_zero": "preserved",
+      "phase": "P4"
+    },
+    "residency": {
+      "registers": "XMM3-7",
+      "temporaries": "XMM0-2",
+      "GP_ABI_words": "FP32=1, FP64=2",
+      "spill_slots_386": "FP32=1, FP64=2 (4 bytes per slot)",
+      "call_preservation": "All XMM registers are caller-saved for cdecl and Go ABI0",
+      "literals": "Deduplicated 16-byte-aligned read-only code-local pool; absolute disp32 loads patched before RX and runtime registration"
+    },
+    "instruction_counts": {
+      "counting": "Concrete statements, including RET and each grouped frame statement; literal data excluded",
+      "FP64_ten_add_chain": {
+        "P2": 114,
+        "P3": 31,
+        "movd_P2": 60,
+        "movd_P3": 4,
+        "P4": 31,
+        "movd_P4": 4
+      },
+      "FP64_var_recurrence_64bit_counter": {
+        "P2": 115,
+        "P3": 69,
+        "movd_P2": 24,
+        "movd_P3": 8,
+        "P4": 61,
+        "movd_P4": 4
+      },
+      "native_width_IDCT_64samples_8coefficients": {
+        "idctvar": 1556,
+        "idctargs": 1943,
+        "P3": {
+          "idctvar": 1687,
+          "idctargs": 2070
+        }
+      },
+      "FP64_shared_constant_multiply_add": {
+        "P4": 13,
+        "pool_loads": 1
+      }
+    },
+    "p2_mixed_fp_sweep": {
+      "phase": "P2",
+      "accepted_cases": 3000,
+      "successful_checks": 38555,
+      "known_stack_frame_limits": 9766,
+      "fp_allocation_pressure_failures": 0,
+      "unexpected_errors": 0,
+      "mismatches": 0,
+      "per_configuration": {
+        "Compile/C/NoUse": {
+          "executed": 4547,
+          "known_limits": 0
+        },
+        "Compile/C/Platform": {
+          "executed": 4547,
+          "known_limits": 0
+        },
+        "Compile/C/Platform/Compact": {
+          "executed": 4547,
+          "known_limits": 0
+        },
+        "Compile/C/Platform128": {
+          "executed": 1005,
+          "known_limits": 3542
+        },
+        "Compile/Go/NoUse": {
+          "executed": 4547,
+          "known_limits": 0
+        },
+        "Compile/Go/Platform+Func": {
+          "executed": 4547,
+          "known_limits": 0
+        },
+        "Foreign/C/Platform": {
+          "executed": 3039,
+          "known_limits": 0
+        },
+        "Go/C/Platform": {
+          "executed": 5888,
+          "known_limits": 3112
+        },
+        "Go/Go/Platform+Func": {
+          "executed": 5888,
+          "known_limits": 3112
+        }
+      }
+    },
+    "raw_emission": {
+      "missing_base_error": "compile.ErrCodeBaseRequired",
+      "automatic_mapping": "Prepare().Bind",
+      "known_base": "EmissionTemplate.LinkAt / machine.LinkRelocationsAt",
+      "low_level_mapping": "execution.MapWithRelocations"
+    }
+  },
+  "native_simd": {
+    "scope": "handoff-386-simd.md P5",
+    "status": "complete",
+    "baseline": "i686 + SSE2",
+    "optional_extensions": [
+      "pclmulqdq"
+    ],
+    "register_homes": "XMM3-XMM7 shared with scalar FP; XMM0-XMM2 reserved expansion temporaries",
+    "spills": "four 32-bit words (16 bytes), MOVDQU; EBP workspace or ESP + outgoing call area",
+    "gp_edges": "64-bit lanes use low/high GPR pairs via MOVD/PUNPCKLDQ and MOVD/PSHUFD",
+    "lowering": "128-bit integer native/expanded; wider vectors split; labels/Vars and unsupported operations scalarize; empty non-nil Features forces scalar lanes",
+    "operations": [
+      "load/store",
+      "zero and pooled constants",
+      "splat/extract/halfword insert/insert-zero",
+      "add/subtract/and/or/xor",
+      "32-bit lane immediate shifts/rotates",
+      "16-bit lane multiply",
+      "byte equality and mask bits",
+      "PCLMULQDQ with all four selectors"
+    ],
+    "evidence": [
+      "target/i386/vector.go",
+      "target/i386/vector_test.go",
+      "target/i386/vector_linux_386_test.go",
+      "compile/vector_report_test.go",
+      "compile/vector_linux_386_test.go",
+      "compile/vector_shift_linux_test.go",
+      "compile/vector_clmul_linux_test.go",
+      "abi/cpu_profile_test.go",
+      "cpuprofile/x86_test.go",
+      "examples/sha256/main_test.go",
+      "e2e/.build/results/386-p5/summary.md"
+    ],
+    "acceptance": {
+      "go_versions": [
+        "1.26.9",
+        "1.27.2"
+      ],
+      "runner": "QEMU 10.2.3 qemu32,-sse3 and max, private container binfmt namespace",
+      "profile_checks": 134,
+      "missing_sse2_probe": "included in profile checks; GO386=softfloat driver",
+      "final_assembler_checks": 4,
+      "final_pressure_and_call_checks": 4,
+      "sha256_digest_modes": [
+        "SSE2",
+        "forced scalar"
+      ],
+      "sha256_instructions": {
+        "scalar": 48001,
+        "SSE2": 6777,
+        "pool_data_counted": false
+      },
+      "varfuzz": "No vector grammar; existing integer/FP scalar fuzz/legacy regressions run in both profiles and versions. Dedicated native/scalar SIMD differentials cover vector lowering.",
+      "failures": 0,
+      "smoke_checks": 4,
+      "native_go_test": "pass",
+      "cross_target_vet": "pass",
+      "harness_unit_tests": "pass",
+      "diff_check": "pass"
+    },
+    "limitations": [
+      "No FMA, AVX/VEX or native vector width above 128 bits",
+      "Managed Go calls retain the existing 240-byte frame limit"
+    ]
+  }
+}

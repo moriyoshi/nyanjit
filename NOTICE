@@ -1,0 +1,22 @@
+nyanjit
+Copyright 2026 Moriyoshi Koizumi
+
+This product includes software developed by Moriyoshi Koizumi
+(https://github.com/moriyoshi/nyanjit).
+
+This product uses PureGo (github.com/ebitengine/purego) for foreign calls
+and callbacks on supported platforms.
+Copyright 2022 The Ebitengine Authors
+PureGo is licensed under the Apache License, Version 2.0.
+https://github.com/ebitengine/purego
+
+PureGo also includes code originating from the Go runtime, copyright
+The Go Authors, under the BSD 3-Clause License.
+https://github.com/golang/go/blob/master/LICENSE
+
+Inline mathematical functions (builder/math_functions.go and
+compile/math_helpers.go) use algorithms, coefficients, and tables adapted from
+Go's math package, copyright The Go Authors, under the BSD 3-Clause
+License. The license is included in builder/MATH-LICENSE. Upstream
+Sun Microsystems and Cephes notices are preserved in
+builder/MATH-NOTICES.
