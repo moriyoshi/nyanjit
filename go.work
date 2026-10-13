@@ -1,0 +1,9 @@
+go 1.26.0
+
+use (
+	.
+	./backend
+	./e2e
+	./e2e/ppc64cgo
+	./examples/snake_termbox
+)

@@ -1,0 +1,4 @@
+.agents-workspace/
+e2e/.build/
+*.test
+instrument/jitbench/.build/

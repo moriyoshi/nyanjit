@@ -1,0 +1,82 @@
+#include "textflag.h"
+#include "funcdata.h"
+
+// Register file slots, 8 bytes each:
+//	0 X8  1 X9 (workspace)  2..10 X18..X26  11 F8  12 F9  13..22 F18..F27
+//	23/24 SP before/after  25/26 g (X27)  27/28 X3 (gp)  29/30 X4 (tp)
+// 8(SP) keeps the register file address across the call.
+TEXT ·callChecked(SB),NOSPLIT,$16-48
+	NO_LOCAL_POINTERS
+	MOV regs+32(FP), X5
+	MOV X5, 8(X2)
+	MOV X2, 184(X5)
+	MOV g, 200(X5)
+	MOV X3, 216(X5)
+	MOV TP, 232(X5)
+	MOV entry+0(FP), X6
+	MOV args+8(FP), X7
+	MOV 0(X7), X10
+	MOV 8(X7), X11
+	MOV 16(X7), X12
+	MOV 24(X7), X13
+	MOV 32(X7), X14
+	MOV 40(X7), X15
+	MOV 48(X7), X16
+	MOV 56(X7), X17
+	MOVD 88(X5), F8
+	MOVD 96(X5), F9
+	MOVD 104(X5), F18
+	MOVD 112(X5), F19
+	MOVD 120(X5), F20
+	MOVD 128(X5), F21
+	MOVD 136(X5), F22
+	MOVD 144(X5), F23
+	MOVD 152(X5), F24
+	MOVD 160(X5), F25
+	MOVD 168(X5), F26
+	MOVD 176(X5), F27
+	MOV 0(X5), X8
+	MOV 8(X5), X9
+	MOV 16(X5), X18
+	MOV 24(X5), X19
+	MOV 32(X5), X20
+	MOV 40(X5), X21
+	MOV 48(X5), X22
+	MOV 56(X5), X23
+	MOV 64(X5), X24
+	MOV 72(X5), X25
+	MOV 80(X5), X26
+	JALR RA, (X6)
+	MOV 8(X2), X5
+	MOV X8, 0(X5)
+	MOV X9, 8(X5)
+	MOV X18, 16(X5)
+	MOV X19, 24(X5)
+	MOV X20, 32(X5)
+	MOV X21, 40(X5)
+	MOV X22, 48(X5)
+	MOV X23, 56(X5)
+	MOV X24, 64(X5)
+	MOV X25, 72(X5)
+	MOV X26, 80(X5)
+	MOVD F8, 88(X5)
+	MOVD F9, 96(X5)
+	MOVD F18, 104(X5)
+	MOVD F19, 112(X5)
+	MOVD F20, 120(X5)
+	MOVD F21, 128(X5)
+	MOVD F22, 136(X5)
+	MOVD F23, 144(X5)
+	MOVD F24, 152(X5)
+	MOVD F25, 160(X5)
+	MOVD F26, 168(X5)
+	MOVD F27, 176(X5)
+	MOV X2, 192(X5)
+	MOV g, 208(X5)
+	MOV X3, 224(X5)
+	MOV TP, 240(X5)
+	MOV 200(X5), g
+	MOV 216(X5), X3
+	MOV 232(X5), TP
+	MOV X10, ret+40(FP)
+	RET
