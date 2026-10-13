@@ -1,0 +1,231 @@
+{
+  "objective": "all the PPC work is done.",
+  "scope": "All PPC implementation, optimization, integration and validation items discussed in the thread; no item is waived by this checklist.",
+  "hardware": {
+    "available": false,
+    "evidence": "User answered that no POWER machine is available; hardware validation remains unverified."
+  },
+  "requirements": [
+    {
+      "id": "elfv2-userspace",
+      "requirement": "Separate BE/LE sysroots; verified ELFv2 loader; PIE and real-C/cgo/shared-library tests",
+      "status": "complete",
+      "evidence": [
+        "SHA256-pinned musl ELFv2 BE loader and separate Debian LE sysroot in container image sha256:72bd18e44db2bbc1eaa83c9a31d179deb82d1dc6efd5894d74d3dfb40085cdd1",
+        "e2e/ppc64.star: POWER8/9/10, Go 1.26.9 and 1.27.2; PIE and actual shared-library/cgo callbacks pass. Go 1.26 BE PIE/cgo are six expected skips.",
+        "e2e/.build/results contains the four JUnit reports; total 803 passes, six expected skips, zero failures.",
+        "Native go test ./... and harness unit tests pass; Linux/amd64, /386 and /riscv64 full QEMU suites pass after upstream purego update."
+      ]
+    },
+    {
+      "id": "hardware-publication",
+      "requirement": "Validate executable-memory publication and cache synchronization on real POWER hardware",
+      "status": "needs-hardware",
+      "evidence": []
+    },
+    {
+      "id": "managed-stacks",
+      "requirement": "Generated stack-growth checks, frames beyond 640 bytes, pointer maps and runtime compatibility",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "abi-shapes",
+      "requirement": "Native FP/aggregate/variadic/stack arguments and wider call results; twelve Go entry arguments",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "foreign-callbacks",
+      "requirement": "Native FP/aggregate callback signatures and callbacks on foreign-created threads",
+      "status": "in-progress",
+      "evidence": [
+        "C-created threads work when real cgo supplies TLS and runtime attachment; the nil-g rejection was removed from the real-cgo callback path.",
+        "e2e/ppc64cgo tests concurrent foreign threads, repeated callbacks, registered JIT reentry, Go stack growth, GC and recovered callback panics in exe and PIE.",
+        "Big-endian native FP/aggregate callback signatures remain pending."
+      ]
+    },
+    {
+      "id": "ctr-loops",
+      "requirement": "Select CTR countdown loops and report CTR constraints/clobbers",
+      "status": "complete",
+      "evidence": [
+        "PreferCompactLoops selects typed CTR countdown loops after allocation and before range relaxation. Each external entry initializes CTR; the backedge bypasses initialization; exit restores the GPR count to zero.",
+        "Safety analysis checks every counter use, calls/CTR consumers, overlapping loops, side entries, early exits and per-flag liveness through partial writers. Scheduled work between DEC and compare is supported.",
+        "PreflightRegisterScopes exposes optional CTR/BDNZ opportunities; emitted special-resource reports include actual CTR clobbers without inventing a GPR ordinal.",
+        "BDNZ relaxes from BDZ/B while preserving flags; an executing 36 KB loop exercises the long form.",
+        "Native tests cover zero entry, observable counter restoration and body-count fallback; unit tests cover nested contention and CFG/flag barriers. All twelve CPU/Go/byte-order variants pass."
+      ]
+    },
+    {
+      "id": "arithmetic-flags",
+      "requirement": "Reuse CR/XER facts from arithmetic in predicates",
+      "status": "complete",
+      "evidence": [
+        "machine.Stream accepts exact per-flag effects from the physical emitter and preserves independent facts; snapshots detach aliases.",
+        "PPC CR0 sign/zero and XER carry/borrow are reused at matching value widths; POWER9/10 can use CA32. Composed predicates transfer XER through CR7 without clobbering CR0; POWER8 fallback and MCRXRX have independent GNU assembler encoding checks.",
+        "Narrowing/sign-extension aliases are width-proven. Calls and arithmetic right shifts invalidate only applicable facts; unrelated comparisons and logical operations preserve XER. Immediate and truncating-extension edge cases are covered.",
+        "Countdown predicates emit addic. and bne without a redundant compare. Branch compaction preserves independently reachable jumps.",
+        "e2e/.build/results/ppc64-ctr-loops.xml and ppc64le-ctr-loops.xml contain passing flag tests in every POWER8/9/10 and Go 1.26.9/1.27.2 variant, both byte orders; native, amd64, 386 and riscv64 regressions pass."
+      ]
+    },
+    {
+      "id": "variable-shifts",
+      "requirement": "Direct register-count shifts/rotations with portable width/count semantics",
+      "status": "complete",
+      "evidence": [
+        "Scalar value-count shifts remain semantic IR until selection. PPC emits SLD/SRD/SRAD or SLW/SRW/SRAW with a full unsigned count clamp; rotations use RLDCL/RLWNM, NEG for right rotation and repeated narrow patterns for 8/16-bit values.",
+        "Register reuse supports either dead input; arithmetic right shifts report CR0/XER effects and rotations preserve flag facts. Byte/text sizes, PCs, reserved temporaries and independent GNU POWER8 encoding goldens are tested.",
+        "Execution tests cover every value/count width, oversized and high-bit counts, live source/count operands, forced spills, scope exports and label arguments. Targets without a native register-count operation receive a verified portable expansion, including narrow rotations and paired counts on 386.",
+        "e2e/.build/results/ppc64-variable-shifts.xml and ppc64le-variable-shifts.xml: 500 passes, zero failures; each new execution test ran in all twelve POWER/Go/byte-order variants. Native go test ./..., go vet ./..., harness tests and full Linux/amd64,/386,/riscv64 QEMU suites pass."
+      ]
+    },
+    {
+      "id": "wide-arithmetic",
+      "requirement": "Native carry chains and high-half multiply for 128-bit lowering",
+      "status": "complete",
+      "evidence": [
+        "Builder wide add/sub/multiply retain scalar carry/borrow and high-product IR. Public IR includes OpCarryAdd/OpBorrowSub, OpAddWithCarry/OpSubWithBorrow and OpMulHigh; portable selection preserves width semantics on every existing target, including register pairs on 386.",
+        "Single-use carry extraction fuses into selected high-word operations. Allocation reuses a low-word XER fact only when operation, width and operands match; otherwise emission recomputes it. Wide add/sub select ADDC/ADDE and SUBFC/SUBFE chains; observed carry values are materialized. Incoming scalar carry operands use their low bit.",
+        "PPC MULHDU/MULHWU supply native unsigned high products. Wide multiplication uses MULHDU for its low-word high half and can contract cross-products to MADDLD on POWER9/10. The new instruction encodings were independently checked with GNU POWER8 assembler.",
+        "Carry chains report CR0/XER effects without inventing binary carry predicates. Width-proven identity/widening aliases preserve result flags; CTR safety analysis recognizes carry consumers and all five fused operands.",
+        "Execution tests cover carry/borrow boundaries, 200 deterministic random wide products and sums, operand aliasing, scope/label transfers, shared carries, overwritten XER, high-result predicate reuse, all scalar widths and full unsigned carry operands.",
+        "e2e/.build/results/ppc64-wide-arithmetic.xml and ppc64le-wide-arithmetic.xml: 500 passes, zero failures. All seven new execution tests pass in every POWER8/9/10, Go 1.26.9/1.27.2 and byte-order variant; native go test ./..., go vet ./..., harness tests and full Linux/amd64,/386,/riscv64 QEMU regression suites pass."
+      ]
+    },
+    {
+      "id": "cpu-levels",
+      "requirement": "Explicit POWER8/9/10 capabilities and POWER9 integer multiply-add",
+      "status": "complete",
+      "evidence": [
+        "abi.PPC64CPU and CompileOptions.PPC64CPU select POWER8/9/10; default is POWER8. Emission reports preserve the resolved level in straight-line and control-flow functions.",
+        "Native CPU gating uses Linux HWCAP2, verified under POWER8/9/10 QEMU for both byte orders and Go 1.26.9/1.27.2; text and scoped preflight support explicit cross-target levels.",
+        "POWER9/10 select MADDLD for single-use arbitrary and scaled integer products; shared products stay materialized. Narrow results retain their modular width; destination/operand aliasing is covered.",
+        "MADDLD encoding 0x106429b3 independently checked against Go tool asm; byte/text sizes, implicit writes and preservation of CR/XER/FPSCR covered.",
+        "e2e/.build/results/ppc64-cpu-levels.xml and ppc64le-cpu-levels.xml: 440 pass, zero failures; native go test ./..., go vet ./..., harness tests and Linux/amd64,/386,/riscv64 QEMU regression suites pass."
+      ]
+    },
+    {
+      "id": "fp-residency",
+      "requirement": "Allocate floating intermediates to FPRs across operations",
+      "status": "complete",
+      "evidence": [
+        "Scalar FP register residency in F3-F13, eight-byte spill homes, bit-preserving GPR boundaries, call spills, scopes/labels, native FNEG/FABS and shared PIC literal pools.",
+        "docs/fp-performance.md records all three optimization stages and before/after counts; FPow POWER8 drops from 1518 to 821 instructions."
+      ]
+    },
+    {
+      "id": "memory-and-allocation",
+      "requirement": "Native narrow loads/stores, better addressing, C callee-saved allocation",
+      "status": "pending",
+      "evidence": [
+        "Address-fold guards preserve pointer-width truncation on wider targets; scaled arithmetic now truncates every expansion path. Native narrow load/store opcodes and C callee-saved allocation remain pending."
+      ]
+    },
+    {
+      "id": "far-branches",
+      "requirement": "Flag-preserving branches beyond direct branch range",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "openbsd-port",
+      "requirement": "OpenBSD/ppc64 implementation and VM acceptance",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "aix-port",
+      "requirement": "AIX/ppc64 implementation and execution acceptance",
+      "status": "pending",
+      "evidence": []
+    }
+  ],
+  "latest_validation": {
+    "date": "2026-10-13",
+    "checks": {
+      "ppc64-elfv2-integration.xml": {
+        "pass": 123,
+        "skip": 6,
+        "fail": 0
+      },
+      "ppc64-standard-after-elfv2.xml": {
+        "pass": 223,
+        "skip": 0,
+        "fail": 0
+      },
+      "ppc64le-elfv2-integration.xml": {
+        "pass": 240,
+        "skip": 0,
+        "fail": 0
+      },
+      "ppc64le-standard-after-elfv2.xml": {
+        "pass": 217,
+        "skip": 0,
+        "fail": 0
+      }
+    },
+    "image_bytes": 16088538354
+  },
+  "cpu_validation": {
+    "date": "2026-10-13",
+    "checks": {
+      "ppc64-cpu-levels.xml": {
+        "pass": 223,
+        "skip": 0,
+        "fail": 0
+      },
+      "ppc64le-cpu-levels.xml": {
+        "pass": 217,
+        "skip": 0,
+        "fail": 0
+      }
+    }
+  },
+  "next_work": "Implement native narrow memory operations and C callee-saved allocation, then continue every remaining requirement; hardware cache validation still has no POWER runner.",
+  "loop_and_flag_validation": {
+    "date": "2026-10-13",
+    "checks": {
+      "ppc64-ctr-loops.xml": {
+        "pass": 253,
+        "skip": 0,
+        "fail": 0
+      },
+      "ppc64le-ctr-loops.xml": {
+        "pass": 247,
+        "skip": 0,
+        "fail": 0
+      }
+    }
+  },
+  "variable_shift_validation": {
+    "date": "2026-10-13",
+    "checks": {
+      "ppc64-variable-shifts.xml": {
+        "pass": 253,
+        "skip": 0,
+        "fail": 0
+      },
+      "ppc64le-variable-shifts.xml": {
+        "pass": 247,
+        "skip": 0,
+        "fail": 0
+      }
+    }
+  },
+  "wide_arithmetic_validation": {
+    "date": "2026-10-13",
+    "checks": {
+      "ppc64-wide-arithmetic.xml": {
+        "pass": 253,
+        "skip": 0,
+        "fail": 0
+      },
+      "ppc64le-wide-arithmetic.xml": {
+        "pass": 247,
+        "skip": 0,
+        "fail": 0
+      }
+    }
+  }
+}

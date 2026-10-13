@@ -1,0 +1,83 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with:
+          go-version: '1.27.2'
+          cache-dependency-path: |
+            go.sum
+            e2e/go.sum
+      - name: Check formatting
+        run: |
+          files=$(git ls-files -z '*.go' | xargs -0 gofmt -l)
+          if [ -n "$files" ]; then
+            echo "$files"
+            exit 1
+          fi
+      - run: ./scripts/vet-all.sh
+      - run: go -C e2e test ./...
+
+  test:
+    name: test (${{ matrix.runner }}, Go ${{ matrix.go }})
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        runner: [ubuntu-24.04, ubuntu-24.04-arm]
+        go: ['1.26.9', '1.27.2']
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with:
+          go-version: ${{ matrix.go }}
+          cache-dependency-path: go.sum
+      - run: go test ./...
+      - name: Native 386 tests
+        if: matrix.runner == 'ubuntu-24.04'
+        # Go's 386 binaries run directly on this x86-64 kernel; no multilib
+        # toolchain is needed. Real cgo coverage belongs to the E2E suite.
+        env:
+          GOARCH: '386'
+          CGO_ENABLED: '0'
+        run: go test ./...
+
+  cross-build:
+    name: cross-build (Go ${{ matrix.go }})
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        go: ['1.26.9', '1.27.2']
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with:
+          go-version: ${{ matrix.go }}
+          cache-dependency-path: |
+            go.sum
+            e2e/go.sum
+      - run: ./e2e/ci/crossbuild.sh -go-version "${{ matrix.go }}"
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        if: always()
+        with:
+          name: crossbuild-go${{ matrix.go }}
+          path: e2e/.build/results/crossbuild.xml
+          if-no-files-found: warn

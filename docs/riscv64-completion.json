@@ -1,0 +1,37 @@
+{
+  "scope": "handoff-backend-parity.md Phases 0\u20135; not the broader PPC roadmap",
+  "architecture": "riscv64",
+  "status": "complete",
+  "cpu_profiles": true,
+  "features": [
+    "baseline variable shifts and rotates",
+    "MULHU and flag-free carry chains",
+    "Zbb ROL/ROR/CLZ/CTZ/ANDN",
+    "Zba SH1ADD/SH2ADD/SH3ADD",
+    "direct zero-branch countdowns"
+  ],
+  "evidence": [
+    "compile/backend_parity_test.go",
+    "compile/backend_budget_test.go",
+    "compile/shift_by_linux_test.go",
+    "compile/mul_high_linux_test.go",
+    "compile/word_carry_linux_test.go",
+    "compile/count_zeros_linux_test.go",
+    "compile/profile_instructions_test.go",
+    "e2e/riscv64.star",
+    "e2e/.build/results/backend-parity-riscv64.xml"
+  ],
+  "acceptance": {
+    "go_versions": [
+      "1.26.9",
+      "1.27.2"
+    ],
+    "checks": 116,
+    "failures": 0,
+    "runner": "QEMU user-mode baseline/max"
+  },
+  "limitations": [
+    "FP residency and large compare immediates are outside the parity handoff",
+    "Native full RVA profile validation remains conservative when Linux does not expose every mandate"
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "scope": "handoff-backend-parity.md Phases 0\u20135; not the broader PPC roadmap",
+  "architecture": "amd64",
+  "status": "complete",
+  "cpu_profiles": true,
+  "features": [
+    "CL shifts/rotates with fixed-register scheduling",
+    "MUL, ADC/SBB",
+    "BMI2 SHLX/SHRX/SARX/MULX/RORX",
+    "BSR/BSF and LZCNT/TZCNT",
+    "independent S/Z/CF facts; INC/DEC and BMI2 flag preservation",
+    "existing LOOP fusion"
+  ],
+  "evidence": [
+    "compile/backend_parity_test.go",
+    "compile/backend_budget_test.go",
+    "compile/shift_by_linux_test.go",
+    "compile/mul_high_linux_test.go",
+    "compile/word_carry_linux_test.go",
+    "compile/count_zeros_linux_test.go",
+    "compile/profile_instructions_test.go",
+    "e2e/amd64.star",
+    "e2e/.build/results/backend-parity-amd64.xml"
+  ],
+  "acceptance": {
+    "go_versions": [
+      "1.26.9",
+      "1.27.2"
+    ],
+    "checks": 120,
+    "failures": 0,
+    "runner": "QEMU user-mode baseline/max"
+  },
+  "limitations": [
+    "FP residency and large compare immediates are outside the parity handoff"
+  ]
+}

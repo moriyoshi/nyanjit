@@ -1,0 +1,35 @@
+{
+  "scope": "handoff-backend-parity.md Phases 0\u20135; not the broader PPC roadmap",
+  "architecture": "386",
+  "status": "complete",
+  "cpu_profiles": true,
+  "features": [
+    "CL scalar shifts, SHLD/SHRD paired shifts and rotates",
+    "native 32-bit MUL/ADC/SBB",
+    "legacy visitors canonicalized to shared carry/high-product operations",
+    "portable bit-count fallbacks"
+  ],
+  "evidence": [
+    "compile/backend_parity_test.go",
+    "compile/backend_budget_test.go",
+    "compile/shift_by_linux_test.go",
+    "compile/mul_high_linux_test.go",
+    "compile/word_carry_linux_test.go",
+    "compile/count_zeros_linux_test.go",
+    "compile/profile_instructions_test.go",
+    "e2e/386.star",
+    "e2e/.build/results/backend-parity-386.xml"
+  ],
+  "acceptance": {
+    "go_versions": [
+      "1.26.9",
+      "1.27.2"
+    ],
+    "checks": 106,
+    "failures": 0,
+    "runner": "QEMU user-mode baseline/max"
+  },
+  "limitations": [
+    "FP residency and large compare immediates are outside the parity handoff"
+  ]
+}
